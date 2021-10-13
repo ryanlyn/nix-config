@@ -12,6 +12,7 @@
     pkgs.dust
     pkgs.exa
     pkgs.fd
+    pkgs.google-cloud-sdk
     pkgs.grex
     pkgs.htop
     pkgs.httpie
