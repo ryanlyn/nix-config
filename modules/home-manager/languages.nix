@@ -3,6 +3,7 @@
 {
   home.packages = [
     # python
+    pkgs.pipenv
     (
       pkgs.python38.withPackages
         (
@@ -10,6 +11,7 @@
             p.black
             p.flake8
             p.mypy
+            # p.poetry # disable: collision
             p.pylint
             p.virtualenv
           ]
