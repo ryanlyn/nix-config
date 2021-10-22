@@ -34,5 +34,6 @@
 
     # terraform
     pkgs.terraform
+    pkgs.tflint
   ];
 }
