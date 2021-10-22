@@ -18,6 +18,7 @@
     pkgs.httpie
     pkgs.lorri
     pkgs.jq
+    pkgs.kubectl
     pkgs.procs
     pkgs.ripgrep
     pkgs.spacevim
