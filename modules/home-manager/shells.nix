@@ -55,6 +55,9 @@
 
       # direnv
       eval "$(${pkgs.direnv}/bin/direnv hook zsh)"
+
+      # google-cloud-sdk
+      export PATH="$HOME/google-cloud-sdk/bin:$PATH"
     '';
 
     sessionVariables = {

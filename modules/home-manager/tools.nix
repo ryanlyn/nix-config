@@ -12,13 +12,17 @@
     pkgs.dust
     pkgs.exa
     pkgs.fd
-    pkgs.google-cloud-sdk
+    # prefer non-hermetic installation because of gcloud plugins
+    # see https://cloud.google.com/sdk/docs/install
+    # pkgs.google-cloud-sdk 
     pkgs.grex
     pkgs.htop
     pkgs.httpie
     pkgs.lorri
     pkgs.jq
+    pkgs.kpt
     pkgs.kubectl
+    pkgs.kustomize
     pkgs.procs
     pkgs.ripgrep
     pkgs.spacevim
