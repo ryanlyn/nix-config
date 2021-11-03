@@ -39,14 +39,17 @@
 
       overlays = [ ];
 
-      supportedSystems = [ "x86_64-darwin" "x86_64-linux" ];
+      supportedSystems = [ "aarch64-darwin" "x86_64-darwin" "x86_64-linux" ];
       isDarwin = system: (builtins.elem system lib.platforms.darwin);
       homePrefix = system: if isDarwin system then "/Users" else "/home";
 
       baseDarwinConfig = { pkgs, ... }: {
         environment.darwinConfig = "./modules/darwin";
         nix.package = pkgs.nixFlakes;
-        nix.extraOptions = "experimental-features = nix-command flakes";
+        nix.extraOptions = "
+          experimental-features = nix-command flakes
+          extra-platforms = aarch64-darwin x86_64-darwin
+        ";
       };
 
       mkDarwinConfig =
@@ -56,6 +59,7 @@
         }:
 
         darwinSystem {
+          system = system;
           modules = baseModules ++ extraModules ++ [{ nixpkgs.overlays = overlays; }];
           specialArgs = { inherit inputs lib; };
         };
@@ -81,8 +85,13 @@
     {
 
       darwinConfigurations = {
-        personal = mkDarwinConfig {
+        personalx86 = mkDarwinConfig {
+          system = "x86_64-darwin";
           # todo: add profiles
+          extraModules = [ ];
+        };
+        personalArm64 = mkDarwinConfig {
+          system = "aarch64-darwin";
           extraModules = [ ];
         };
         canva = mkDarwinConfig {
@@ -92,11 +101,16 @@
       };
 
       homeConfigurations = {
-        personal = mkHomeConfig {
+        personalx86 = mkHomeConfig {
+          system = "x86_64-darwin";
           username = "ryan";
           extraModules = [ ];
         };
-
+        personalArm64 = mkHomeConfig {
+          system = "aarch64-darwin";
+          username = "ryan";
+          extraModules = [ ];
+        };
         canva = mkHomeConfig {
           username = "ryan.l";
           extraModules = [ ];
@@ -107,7 +121,7 @@
         (map
           (system: {
             name = system;
-            value = { darwin = self.darwinConfigurations.personal.config.system.build.toplevel; };
+            value = { darwin = self.darwinConfigurations.personalx86.config.system.build.toplevel; };
           })
           lib.platforms.darwin
         )

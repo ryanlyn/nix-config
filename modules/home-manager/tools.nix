@@ -9,7 +9,7 @@
     pkgs.coreutils
     pkgs.curl
     pkgs.direnv
-    pkgs.dust
+    # pkgs.dust  # disable: unavailable on arm64
     pkgs.exa
     pkgs.fd
     # prefer non-hermetic installation because of gcloud plugins

@@ -26,7 +26,7 @@
 
     # haskell
     pkgs.ghc
-    pkgs.haskellPackages.haskell-language-server
+    # pkgs.haskellPackages.haskell-language-server  # disable: circular dependency on arm64
     pkgs.stack
 
     # rust

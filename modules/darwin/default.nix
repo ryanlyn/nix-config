@@ -14,8 +14,8 @@
   # $ nix-env -qaP | grep wget
   environment.systemPackages = [
     pkgs.bashInteractive
-    # nix
-    pkgs.niv
+    # nix  # disable: not needed with flakes
+    # pkgs.niv  # disable: not needed with flakes
     pkgs.nixpkgs-fmt
   ];
 

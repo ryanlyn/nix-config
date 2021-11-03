@@ -107,20 +107,21 @@
   # github
   programs.gh = {
     enable = true;
-    gitProtocol = "ssh";
-    editor = "nvim";
-
-    aliases = {
-      pco = "pr checkout";
-      pck = "pr checks";
-      pcl = "pr close";
-      pcr = "pr create";
-      pd = "pr diff";
-      pl = "pr list";
-      pm = "pr merge";
-      pv = "pr view";
-      pvw = "pr view --web";
-      prs = "pr list -A ryanlyn";
+    settings = {
+      gitProtocol = "ssh";
+      editor = "nvim";
+      aliases = {
+        pco = "pr checkout";
+        pck = "pr checks";
+        pcl = "pr close";
+        pcr = "pr create";
+        pd = "pr diff";
+        pl = "pr list";
+        pm = "pr merge";
+        pv = "pr view";
+        pvw = "pr view --web";
+        prs = "pr list -A ryanlyn";
+      };
     };
   };
 }
