@@ -26,7 +26,7 @@
   ];
 
   # Auto upgrade nix package and the daemon service.
-  # services.nix-daemon.enable = true;
+  services.nix-daemon.enable = true;
 
   # Create /etc/bashrc that loads the nix-darwin environment.
   # programs.fish.enable = true;
