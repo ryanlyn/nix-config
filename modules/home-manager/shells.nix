@@ -53,6 +53,10 @@
       # home-manager
       . $HOME/.nix-profile/etc/profile.d/hm-session-vars.sh 
 
+      # homebrew
+      # nix-darwin bug with apple silicon - requires homebrew to be installed and linked manually
+      eval "$(/opt/homebrew/bin/brew shellenv)"
+
       # direnv
       eval "$(${pkgs.direnv}/bin/direnv hook zsh)"
 
