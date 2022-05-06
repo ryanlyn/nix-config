@@ -10,6 +10,12 @@
       "p10k.zsh" = {
         source = ../../config/powerlevel10k/p10k.zsh;
       };
+      #   "nix/nix.conf" = {
+      #     source = ../../config/nix/nix.conf;
+      #   };
+      #   "alacritty/alacritty.yml" = {
+      #     source = ../../config/alacritty/alacritty.yml;
+      #   };
     };
   };
 }

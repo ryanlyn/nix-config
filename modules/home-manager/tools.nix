@@ -23,6 +23,7 @@
     pkgs.kpt
     pkgs.kubectl
     pkgs.kustomize
+    pkgs.neofetch
     pkgs.procs
     pkgs.ripgrep
     pkgs.spacevim

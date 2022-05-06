@@ -106,6 +106,11 @@
           username = "ryan";
           extraModules = [ ];
         };
+        personalx86Linux = mkHomeConfig {
+          system = "x86_64-linux";
+          username = "ryan";
+          extraModules = [ ];
+        };
         personalArm64 = mkHomeConfig {
           system = "aarch64-darwin";
           username = "ryan";

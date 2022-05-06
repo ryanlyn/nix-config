@@ -26,4 +26,7 @@
 
   # Let Home Manager install and manage itself.
   programs.home-manager.enable = true;
+
+  # enable settings that make Home Manager work better on GNU/Linux distributions other than NixOS
+  targets.genericLinux.enable = true;
 }

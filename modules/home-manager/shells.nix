@@ -48,20 +48,23 @@
     '';
     envExtra = ''
       # nix
-      if [ -e /Users/ryan/.nix-profile/etc/profile.d/nix.sh ]; then . /Users/ryan/.nix-profile/etc/profile.d/nix.sh; fi
+      if [ -e $HOME/.nix-profile/etc/profile.d/nix.sh ]; then . $HOME/.nix-profile/etc/profile.d/nix.sh; fi
 
       # home-manager
       . $HOME/.nix-profile/etc/profile.d/hm-session-vars.sh 
 
       # homebrew
       # nix-darwin bug with apple silicon - requires homebrew to be installed and linked manually
-      eval "$(/opt/homebrew/bin/brew shellenv)"
+      if [[ $OSTYPE == "darwin*" ]]; then eval "$(/opt/homebrew/bin/brew shellenv)"; fi
 
       # direnv
       eval "$(${pkgs.direnv}/bin/direnv hook zsh)"
 
       # google-cloud-sdk
       export PATH="$HOME/google-cloud-sdk/bin:$PATH"
+    '';
+    loginExtra = ''
+      neofetch
     '';
 
     sessionVariables = {
