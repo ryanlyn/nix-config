@@ -10,11 +10,17 @@
       "p10k.zsh" = {
         source = ../../config/powerlevel10k/p10k.zsh;
       };
-      #   "nix/nix.conf" = {
-      #     source = ../../config/nix/nix.conf;
+      #     "nix/nix.conf" = {
+      #       source = ../../config/nix/nix.conf;
+      #     };
+      #     "alacritty/alacritty.yml" = {
+      #       source = ../../config/alacritty/alacritty.yml;
+      #     };
+      #   "xmonad/xmonad.hs" = {
+      #     source = ../../config/xmonad/xmonad.hs;
       #   };
-      #   "alacritty/alacritty.yml" = {
-      #     source = ../../config/alacritty/alacritty.yml;
+      # "rofi/config.rasi"= {
+      #     source = ../../config/rofi/config.rasi;
       #   };
     };
   };

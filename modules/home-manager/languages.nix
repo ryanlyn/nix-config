@@ -25,9 +25,9 @@
     pkgs.yarn
 
     # haskell
-    pkgs.ghc
+    # pkgs.ghc
     # pkgs.haskellPackages.haskell-language-server  # disable: circular dependency on arm64
-    pkgs.stack
+    # pkgs.stack
 
     # rust
     pkgs.rustup
