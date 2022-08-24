@@ -7,6 +7,7 @@
     enable = true;
     userName = "ryanlyn";
     userEmail = "mailboxryanlin@icloud.com";
+    lfs.enable = true;
     ignores = [
       ".DS_Store"
       ".idea"
