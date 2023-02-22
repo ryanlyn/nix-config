@@ -59,7 +59,7 @@
     };
 
     trackpad = {
-      Clicking = false;
+      Clicking = true;
       TrackpadRightClick = true;
     };
   };
