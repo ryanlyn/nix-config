@@ -55,7 +55,9 @@
 
       # homebrew
       # nix-darwin bug with apple silicon - requires homebrew to be installed and linked manually
-      if [[ $OSTYPE == "darwin*" ]]; then eval "$(/opt/homebrew/bin/brew shellenv)"; fi
+      if [[ $OSTYPE == darwin* ]]; then 
+          eval "$(/opt/homebrew/bin/brew shellenv)"
+      fi
 
       # direnv
       eval "$(${pkgs.direnv}/bin/direnv hook zsh)"
