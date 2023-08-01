@@ -62,7 +62,7 @@
     ];
   };
 
-  programs.neovim = { enable = true; };
+  # programs.neovim = { enable = true; };
 
   programs.tmux = { enable = true; };
 

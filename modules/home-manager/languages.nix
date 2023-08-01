@@ -19,12 +19,6 @@
         )
     )
 
-    # js
-    pkgs.hugo
-    pkgs.nodejs
-    pkgs.nodePackages.typescript
-    pkgs.yarn
-
     # haskell
     pkgs.ghc
     # pkgs.haskellPackages.haskell-language-server  # disable: circular dependency on arm64

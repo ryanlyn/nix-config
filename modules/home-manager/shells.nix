@@ -58,6 +58,12 @@
       if [[ $OSTYPE == darwin* ]]; then 
           eval "$(/opt/homebrew/bin/brew shellenv)"
       fi
+      
+      # nvm
+      if [ -e $HOME/.nvm ]; then
+          export NVM_DIR=~/.nvm
+          source $(brew --prefix nvm)/nvm.sh
+      fi
 
       # direnv
       eval "$(${pkgs.direnv}/bin/direnv hook zsh)"

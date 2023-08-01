@@ -10,10 +10,10 @@
       "p10k.zsh" = {
         source = ../../config/powerlevel10k/p10k.zsh;
       };
-      "nvim" = {
-        source = ../../config/nvim;
-        recursive = true;
-      };
+      # "nvim" = {
+      #  source = ../../config/nvim;
+      #  recursive = true;
+      #};
       #     "nix/nix.conf" = {
       #       source = ../../config/nix/nix.conf;
       #     };
