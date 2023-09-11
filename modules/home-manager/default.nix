@@ -9,6 +9,13 @@
     ./tools.nix
   ];
 
+  nixpkgs = {
+    config = {
+      allowUnfree = true;
+      allowUnfreePredicate = (_: true);
+    };
+  };
+
   # the following required attributes are injected by flakes:
   #   - home.username
   #   - home.homeDirectory

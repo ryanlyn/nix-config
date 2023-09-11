@@ -17,9 +17,9 @@
       #     "nix/nix.conf" = {
       #       source = ../../config/nix/nix.conf;
       #     };
-      #     "alacritty/alacritty.yml" = {
-      #       source = ../../config/alacritty/alacritty.yml;
-      #     };
+      "alacritty/alacritty.yml" = {    
+        source = ../../config/alacritty/alacritty.yml;
+      };
       #   "xmonad/xmonad.hs" = {
       #     source = ../../config/xmonad/xmonad.hs;
       #   };
