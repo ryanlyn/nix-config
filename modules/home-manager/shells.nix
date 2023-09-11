@@ -47,6 +47,9 @@
       [[ ! -f ${config.xdg.configHome}/p10k.zsh ]] || source ${config.xdg.configHome}/p10k.zsh
     '';
     envExtra = ''
+      # secrets
+      if [ -e $HOME/.secrets ]; then source $HOME/.secrets; fi
+
       # nix
       if [ -e $HOME/.nix-profile/etc/profile.d/nix.sh ]; then . $HOME/.nix-profile/etc/profile.d/nix.sh; fi
 
@@ -59,10 +62,31 @@
           eval "$(/opt/homebrew/bin/brew shellenv)"
       fi
       
-      # nvm
+      # nvm (homebrew)
       if [ -e $HOME/.nvm ]; then
           export NVM_DIR=~/.nvm
           source $(brew --prefix nvm)/nvm.sh
+      fi
+
+      # nvm (linux)
+      if [ -e $HOME/.config/nvm ]; then
+        export NVM_DIR="$HOME/.config/nvm"
+        . $NVM_DIR/nvm.sh
+        . $NVM_DIR/bash_completion
+      fi
+      
+      # bun (linux)
+      if [ -e $HOME/.bun ]; then
+        export BUN_INSTALL="$HOME/.bun"
+        export PATH=$BUN_INSTALL/bin:$PATH
+      fi
+
+      # cuda (only installed on linux)
+      # /usr/local/cuda is a symlink to /usr/local/cuda-X.X
+      if [ -e /usr/local/cuda ]; then
+          export PATH=/usr/local/cuda/bin:$PATH
+          # managed by nix
+          # export LD_LIBRARY_PATH=/usr/local/cuda/lib64:$LD_LIBRARY_PATH
       fi
 
       # direnv
@@ -94,6 +118,13 @@
       LC_CTYPE = "en_AU.UTF-8";
       LESSCHARSET = "utf-8";
       TERM = "xterm-256color";
+      LD_LIBRARY_PATH = lib.makeLibraryPath [
+        "/usr/local/cuda/lib64" 
+        # pkgs.gcc-unwrapped
+        # pkgs.zlib
+        # pkgs.libglvnd
+        # pkgs.glib
+      ];
     };
 
     shellAliases = {
