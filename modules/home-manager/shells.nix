@@ -1,5 +1,4 @@
-{ config, pkgs, lib, ... }:
-{
+{ config, pkgs, lib, ... }: {
   # external themes
   programs.starship = {
     enable = false;
@@ -8,10 +7,13 @@
     # See docs here: https://starship.rs/config/
     # Symbols config configured in Flake.
     settings = {
-      battery.display.threshold = 25; # display battery information if charge is <= 25%
-      directory.fish_style_pwd_dir_length = 1; # turn on fish directory truncation
+      battery.display.threshold =
+        25; # display battery information if charge is <= 25%
+      directory.fish_style_pwd_dir_length =
+        1; # turn on fish directory truncation
       directory.truncation_length = 2; # number of directories not to truncate
-      memory_usage.disabled = true; # because it includes cached memory it's reported as full a lot
+      memory_usage.disabled =
+        true; # because it includes cached memory it's reported as full a lot
     };
   };
 
@@ -33,9 +35,9 @@
 
   programs.zsh = {
     enable = true;
-    enableSyntaxHighlighting = true;
+    syntaxHighlighting.enable = true;
     enableCompletion = true;
-    enableAutosuggestions = true;
+    autosuggestion.enable = true;
     autocd = true;
 
     # pure prompt
@@ -61,7 +63,7 @@
       if [[ $OSTYPE == darwin* ]]; then 
           eval "$(/opt/homebrew/bin/brew shellenv)"
       fi
-      
+
       # nvm (homebrew)
       if [ -e $HOME/.nvm ]; then
           export NVM_DIR=~/.nvm
@@ -74,7 +76,7 @@
         . $NVM_DIR/nvm.sh
         . $NVM_DIR/bash_completion
       fi
-      
+
       # bun (linux)
       if [ -e $HOME/.bun ]; then
         export BUN_INSTALL="$HOME/.bun"
@@ -119,7 +121,7 @@
       LESSCHARSET = "utf-8";
       TERM = "xterm-256color";
       LD_LIBRARY_PATH = lib.makeLibraryPath [
-        "/usr/local/cuda/lib64" 
+        "/usr/local/cuda/lib64"
         # pkgs.gcc-unwrapped
         # pkgs.zlib
         # pkgs.libglvnd
@@ -129,24 +131,23 @@
 
     shellAliases = {
       garbage = "nix-collect-garbage -d && docker image prune --force";
-      la = "exa -la";
-      ll = "exa -l";
-      ls = "exa";
-      nix-ds = ''darwin-rebuild switch -I "darwin-config=$HOME/nix-config/darwin.nix"'';
+      la = "eza -la";
+      ll = "eza -l";
+      ls = "eza";
+      nix-ds = ''
+        darwin-rebuild switch -I "darwin-config=$HOME/nix-config/darwin.nix"'';
       nix-hs = "home-manager -f $HOME/nix-config/home.nix switch";
     };
 
-    plugins = [
-      {
-        name = "fzf-tab";
-        src = pkgs.fetchFromGitHub {
-          owner = "Aloxaf";
-          repo = "fzf-tab";
-          rev = "0c36bdcf6a80ec009280897f07f56969f94d377e";
-          sha256 = "0ymp9ky0jlkx9b63jajvpac5g3ll8snkf8q081g0yw42b9hwpiid";
-        };
-      }
-    ];
+    plugins = [{
+      name = "fzf-tab";
+      src = pkgs.fetchFromGitHub {
+        owner = "Aloxaf";
+        repo = "fzf-tab";
+        rev = "0c36bdcf6a80ec009280897f07f56969f94d377e";
+        sha256 = "0ymp9ky0jlkx9b63jajvpac5g3ll8snkf8q081g0yw42b9hwpiid";
+      };
+    }];
 
     oh-my-zsh = {
       enable = true;

@@ -1,10 +1,10 @@
 { config, lib, ... }:
 
 let
-  mkIfCaskPresent = cask: lib.mkIf (lib.any (x: x == cask) config.homebrew.casks);
-in
+  mkIfCaskPresent = cask:
+    lib.mkIf (lib.any (x: x == cask) config.homebrew.casks);
 
-{
+in {
   homebrew.enable = true;
   homebrew.autoUpdate = true;
   homebrew.cleanup = "zap";

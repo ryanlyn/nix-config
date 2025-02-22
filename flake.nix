@@ -19,14 +19,7 @@
     };
   };
 
-  outputs =
-    inputs@{ self
-    , nixpkgs
-    , darwin
-    , home-manager
-    , flake-utils
-    , ...
-    }:
+  outputs = inputs@{ self, nixpkgs, darwin, home-manager, flake-utils, ... }:
 
     let
       inherit (darwin.lib) darwinSystem;
@@ -46,43 +39,45 @@
       baseDarwinConfig = { pkgs, ... }: {
         environment.darwinConfig = "./modules/darwin";
         nix.package = pkgs.nixFlakes;
-        nix.extraOptions = "
-          experimental-features = nix-command flakes
-          extra-platforms = aarch64-darwin x86_64-darwin
-        ";
+        nix.extraOptions =
+          "\n          experimental-features = nix-command flakes\n          extra-platforms = aarch64-darwin x86_64-darwin\n        ";
       };
 
-      mkDarwinConfig =
-        { system ? "x86_64-darwin"
-        , baseModules ? [ home-manager.darwinModules.home-manager baseDarwinConfig ./modules/darwin ]
-        , extraModules ? [ ]
-        }:
+      mkDarwinConfig = { system ? "x86_64-darwin", baseModules ? [
+        home-manager.darwinModules.home-manager
+        baseDarwinConfig
+        ./modules/darwin
+      ], extraModules ? [ ] }:
 
         darwinSystem {
           system = system;
-          modules = baseModules ++ extraModules ++ [{ nixpkgs.overlays = overlays; }];
+          modules = baseModules ++ extraModules
+            ++ [{ nixpkgs.overlays = overlays; }];
           specialArgs = { inherit inputs lib; };
         };
 
-      mkHomeConfig =
-        { username
-        , system ? "x86_64-darwin"
-        , baseModules ? [ ./modules/home-manager ]
-        , extraModules ? [ ]
-        }:
-
-        homeManagerConfiguration rec {
-          inherit system username;
-          homeDirectory = "${homePrefix system}/${username}";
-          stateVersion = "21.11";
-          # extraSpecialArgs = { inherit inputs lib; };
-          configuration = {
-            imports = baseModules ++ extraModules ++ [{ nixpkgs.overlays = overlays; }];
+      mkHomeConfig = { username, system ? "x86_64-darwin"
+        , baseModules ? [ ./modules/home-manager ], extraModules ? [ ] }:
+        let
+          pkgs = import inputs.nixpkgs {
+            inherit system;
+            overlays = overlays;
           };
+        in homeManagerConfiguration rec {
+          inherit pkgs;
+          modules = baseModules ++ extraModules
+            ++ [{ nixpkgs.overlays = overlays; }] ++ [
+              # extraSpecialArgs = { inherit inputs lib; };
+              {
+                home = {
+                  username = username;
+                  homeDirectory = "${homePrefix system}/${username}";
+                  stateVersion = "21.11";
+                };
+              }
+            ];
         };
-
-    in
-    {
+    in {
 
       darwinConfigurations = {
         personalx86 = mkDarwinConfig {
@@ -122,14 +117,12 @@
         };
       };
 
-      checks = listToAttrs (
-        (map
-          (system: {
-            name = system;
-            value = { darwin = self.darwinConfigurations.personalx86.config.system.build.toplevel; };
-          })
-          lib.platforms.darwin
-        )
-      );
+      checks = listToAttrs ((map (system: {
+        name = system;
+        value = {
+          darwin =
+            self.darwinConfigurations.personalx86.config.system.build.toplevel;
+        };
+      }) lib.platforms.darwin));
     };
 }

@@ -54,9 +54,7 @@
     };
 
     # spaces
-    spaces = {
-      spans-displays = false;
-    };
+    spaces = { spans-displays = false; };
 
     trackpad = {
       Clicking = true;

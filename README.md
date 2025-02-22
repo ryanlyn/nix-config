@@ -32,9 +32,23 @@ darwin-rebuild switch --flake '.#personalArm64'
 ```
 
 # Home Manager Usage
+Make sure `targets.genericLinux.enable = true;` is commented out.
 ```bash
 # switch
 home-manager switch --flake '.#personalArm64'
 # build
 home-manager build --flake '.#personalArm64'
+```
+
+
+# Misc
+
+## Formatting
+```
+nix-shell -p nixfmt --run "nixfmt ."
+```
+
+## Updating Flakes
+```bash
+nix flake update
 ```

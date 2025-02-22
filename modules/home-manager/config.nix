@@ -7,9 +7,7 @@
     configHome = "${config.home.homeDirectory}/.config";
 
     configFile = {
-      "p10k.zsh" = {
-        source = ../../config/powerlevel10k/p10k.zsh;
-      };
+      "p10k.zsh" = { source = ../../config/powerlevel10k/p10k.zsh; };
       # "nvim" = {
       #  source = ../../config/nvim;
       #  recursive = true;
@@ -17,7 +15,7 @@
       #     "nix/nix.conf" = {
       #       source = ../../config/nix/nix.conf;
       #     };
-      "alacritty/alacritty.yml" = {    
+      "alacritty/alacritty.yml" = {
         source = ../../config/alacritty/alacritty.yml;
       };
       #   "xmonad/xmonad.hs" = {

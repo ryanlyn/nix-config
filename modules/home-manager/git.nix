@@ -8,12 +8,7 @@
     userName = "ryanlyn";
     userEmail = "mailboxryanlin@icloud.com";
     lfs.enable = true;
-    ignores = [
-      ".DS_Store"
-      ".idea"
-      ".venv"
-      ".vscode"
-    ];
+    ignores = [ ".DS_Store" ".idea" ".venv" ".vscode" ];
 
     aliases = {
       # basic
@@ -54,13 +49,16 @@
       rst = "restore --staged";
 
       # log
-      lg = "log --color --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit --abbrev=8";
+      lg =
+        "log --color --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit --abbrev=8";
 
       # common branch actions
-      mm = "!set -x && git fetch origin master && git merge --no-edit origin/master";
+      mm =
+        "!set -x && git fetch origin master && git merge --no-edit origin/master";
       pg = "!git checkout green && git pull origin green";
       pm = "!git checkout master && git pull origin master";
-      rbg = "!set -x && git fetch origin green && git stash && git rebase origin/green && git stash pop";
+      rbg =
+        "!set -x && git fetch origin green && git stash && git rebase origin/green && git stash pop";
       rbi = "rebase --interactive";
       rbm = "!set -x && git fetch origin master && git rebase origin/master";
 
@@ -71,7 +69,8 @@
       open-repo-link = "!open $(git repo-link)";
       publish = "!git push -u origin $(git branch-name) && open $(git pr-link)";
       pr-link = "!echo $(git repo-link)/compare/master...$(git branch-name)";
-      repo-link = "!git remote get-url origin | sed -n 's_.*:\\(.*\\)\\.git_https://github.com/\\1_p'";
+      repo-link =
+        "!git remote get-url origin | sed -n 's_.*:\\(.*\\)\\.git_https://github.com/\\1_p'";
     };
 
     # Enhanced diffs

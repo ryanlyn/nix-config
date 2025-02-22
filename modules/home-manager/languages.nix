@@ -4,20 +4,16 @@
   home.packages = [
     # python
     pkgs.pipenv
-    (
-      pkgs.python310.withPackages
-        (
-          p: [
-            # p.black # disable: broken python3.10-uvloop-0.16.0.drv dependency
-            p.flake8
-            p.mypy
-            p.pip
-            # p.poetry # disable: collision
-            p.pylint
-            p.virtualenv
-          ]
-        )
-    )
+    pkgs.uv
+    (pkgs.python311.withPackages (p: [
+      # p.black # disable: broken python3.10-uvloop-0.16.0.drv dependency
+      p.flake8
+      p.mypy
+      p.pip
+      # p.poetry # disable: collision
+      p.pylint
+      p.virtualenv
+    ]))
 
     # haskell
     pkgs.ghc

@@ -10,7 +10,7 @@
     pkgs.curl
     pkgs.direnv
     # pkgs.dust  # disable: unavailable on arm64
-    pkgs.exa
+    pkgs.eza
     pkgs.fd
     # prefer non-hermetic installation because of gcloud plugins
     # see https://cloud.google.com/sdk/docs/install
@@ -33,7 +33,10 @@
     pkgs.wget
   ];
 
-  programs.broot = { enable = true; enableZshIntegration = true; };
+  programs.broot = {
+    enable = true;
+    enableZshIntegration = true;
+  };
 
   programs.direnv = {
     enable = true;
@@ -66,5 +69,8 @@
 
   programs.tmux = { enable = true; };
 
-  programs.zoxide = { enable = true; enableZshIntegration = true; };
+  programs.zoxide = {
+    enable = true;
+    enableZshIntegration = true;
+  };
 }
