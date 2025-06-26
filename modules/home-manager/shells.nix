@@ -112,7 +112,7 @@
       # <<< conda initialize <<<
     '';
     loginExtra = ''
-      neofetch
+      # neofetch
     '';
 
     sessionVariables = {
