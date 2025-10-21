@@ -120,13 +120,9 @@
       LC_CTYPE = "en_AU.UTF-8";
       LESSCHARSET = "utf-8";
       TERM = "xterm-256color";
-      LD_LIBRARY_PATH = lib.makeLibraryPath [
-        "/usr/local/cuda/lib64"
-        # pkgs.gcc-unwrapped
-        # pkgs.zlib
-        # pkgs.libglvnd
-        # pkgs.glib
-      ];
+      LD_LIBRARY_PATH = "/usr/local/cuda/lib64";
+      # If you need to add Nix packages to LD_LIBRARY_PATH in the future, use:
+      # LD_LIBRARY_PATH = "/usr/local/cuda/lib64:${lib.makeLibraryPath [ pkgs.gcc-unwrapped ]}";
     };
 
     shellAliases = {
