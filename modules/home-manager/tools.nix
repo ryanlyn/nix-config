@@ -9,12 +9,13 @@
     pkgs.coreutils
     pkgs.curl
     pkgs.direnv
+    pkgs.devbox
     # pkgs.dust  # disable: unavailable on arm64
     pkgs.eza
     pkgs.fd
     # prefer non-hermetic installation because of gcloud plugins
     # see https://cloud.google.com/sdk/docs/install
-    # pkgs.google-cloud-sdk 
+    # pkgs.google-cloud-sdk
     pkgs.grex
     pkgs.htop
     pkgs.httpie

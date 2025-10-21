@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(home-manager switch:*)",
+      "Bash(nix search:*)",
+      "WebSearch"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}
