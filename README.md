@@ -40,6 +40,12 @@ home-manager switch --flake '.#personalArm64'
 home-manager build --flake '.#personalArm64'
 ```
 
+## Shell aliases
+The `nix-ds` alias targets the `personalArm64` Darwin host. Home Manager
+distinguishes between platforms via the `nix-hm-darwin` (personalArm64) and
+`nix-hm-linux` (personalx86Linux) aliases. Update these if another host becomes
+your primary target so they stay aligned with the flake outputs above.
+
 
 # Misc
 
