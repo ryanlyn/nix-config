@@ -79,6 +79,23 @@
         };
     in {
 
+      devShells = eachDefaultSystem (system:
+        let
+          pkgs = import nixpkgs {
+            inherit system;
+            overlays = overlays;
+          };
+        in {
+          default = pkgs.mkShell {
+            name = "nix-config";
+            packages = with pkgs; [
+              git
+              home-manager
+              nixfmt
+            ];
+          };
+        });
+
       darwinConfigurations = {
         personalx86 = mkDarwinConfig {
           system = "x86_64-darwin";

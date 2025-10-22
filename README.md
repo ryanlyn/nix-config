@@ -48,6 +48,16 @@ home-manager build --flake '.#personalArm64'
 nix-shell -p nixfmt --run "nixfmt ."
 ```
 
+## Development Shell
+
+The repository provides a consistent shell environment whether you prefer
+flakes or legacy workflows.
+
+* With flakes enabled, run `nix develop` to enter the environment defined by
+  the flake's default development shell.
+* Without flakes, use `nix-shell` and Nix will fall back to the compatibility
+  wrapper that exposes the same toolset.
+
 ## Updating Flakes
 ```bash
 nix flake update
