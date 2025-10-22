@@ -3,7 +3,14 @@
     "allow": [
       "Bash(home-manager switch:*)",
       "Bash(nix search:*)",
-      "WebSearch"
+      "WebSearch",
+      "Bash(home-manager build:*)",
+      "Bash(sudo launchctl list:*)",
+      "Bash(launchctl list:*)",
+      "Bash(nix:*)",
+      "Read(//Library/LaunchDaemons/**)",
+      "Bash(cat:*)",
+      "Read(//var/log/**)"
     ],
     "deny": [],
     "ask": []

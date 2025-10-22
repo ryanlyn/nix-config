@@ -77,24 +77,21 @@
               }
             ];
         };
-    in {
-
-      devShells = eachDefaultSystem (system:
-        let
-          pkgs = import nixpkgs {
-            inherit system;
-            overlays = overlays;
-          };
-        in {
-          default = pkgs.mkShell {
-            name = "nix-config";
-            packages = with pkgs; [
-              git
-              home-manager
-              nixfmt
-            ];
-          };
-        });
+    in eachDefaultSystem (system:
+      let
+        pkgs = import nixpkgs {
+          inherit system;
+          overlays = overlays;
+        };
+      in {
+        devShells.default = pkgs.mkShell {
+          name = "nix-config";
+          packages = with pkgs; [
+            git
+            nixfmt
+          ] ++ [ inputs.home-manager.packages.${system}.default ];
+        };
+      }) // {
 
       darwinConfigurations = {
         personalx86 = mkDarwinConfig {
@@ -134,12 +131,12 @@
         };
       };
 
-      checks = listToAttrs ((map (system: {
-        name = system;
-        value = {
-          darwin =
-            self.darwinConfigurations.personalx86.config.system.build.toplevel;
-        };
-      }) lib.platforms.darwin));
-    };
+        checks = listToAttrs ((map (system: {
+          name = system;
+          value = {
+            darwin =
+              self.darwinConfigurations.personalx86.config.system.build.toplevel;
+          };
+        }) lib.platforms.darwin));
+      };
 }
