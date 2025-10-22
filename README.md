@@ -25,6 +25,8 @@ nix build --extra-experimental-features 'flakes nix-command' --no-link '.#homeCo
 ```
 
 # Darwin Usage
+- `nix-ds` - Darwin rebuild (personalArm64)
+
 ```bash
 # switch
 darwin-rebuild switch --flake '.#personalArm64'
@@ -33,19 +35,16 @@ darwin-rebuild switch --flake '.#personalArm64'
 
 # Home Manager Usage
 Make sure `targets.genericLinux.enable = true;` is commented out.
+
+- `nix-hm-darwin` - Home Manager switch (personalArm64)
+- `nix-hm-linux` - Home Manager switch (personalx86Linux)
+
 ```bash
 # switch
 home-manager switch --flake '.#personalArm64'
 # build
 home-manager build --flake '.#personalArm64'
 ```
-
-## Shell aliases
-The `nix-ds` alias targets the `personalArm64` Darwin host. Home Manager
-distinguishes between platforms via the `nix-hm-darwin` (personalArm64) and
-`nix-hm-linux` (personalx86Linux) aliases. Update these if another host becomes
-your primary target so they stay aligned with the flake outputs above.
-
 
 # Misc
 

@@ -10,7 +10,11 @@
       "Bash(nix:*)",
       "Read(//Library/LaunchDaemons/**)",
       "Bash(cat:*)",
-      "Read(//var/log/**)"
+      "Read(//var/log/**)",
+      "Read(//nix/store/**)",
+      "Bash(readlink:*)",
+      "Bash(home-manager generations:*)",
+      "Bash(zsh -c \"source ~/.zshrc && alias | grep nix\")"
     ],
     "deny": [],
     "ask": []
