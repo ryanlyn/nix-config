@@ -63,6 +63,8 @@
       rbm = "!set -x && git fetch origin master && git rebase origin/master";
 
       # verbose actions
+      yeet = "!git add . && git commit -m '.' && git push";
+      yeetu = "!git add -u && git commit -m '.' && git push";
       branch-name = "symbolic-ref --short HEAD";
       del-branch = "!git checkout master && git branch -d";
       open-pr-link = "!open $(git pr-link)";
