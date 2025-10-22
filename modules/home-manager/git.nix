@@ -31,7 +31,7 @@
       com = "checkout master";
 
       # cherrypick
-      cp = "cherrypick";
+      cp = "cherry-pick";
 
       # diff
       d = "diff";

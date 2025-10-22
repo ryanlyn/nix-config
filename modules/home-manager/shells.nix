@@ -132,8 +132,10 @@
       ls = "eza";
       # Keep host identifiers in sync with flake.nix and README.md.
       nix-ds = "darwin-rebuild switch --flake $HOME/nix-config#personalArm64";
-      nix-hm-darwin = "home-manager switch --flake $HOME/nix-config#personalArm64";
-      nix-hm-linux = "home-manager switch --flake $HOME/nix-config#personalx86Linux";
+      nix-hm-darwin =
+        "home-manager switch --flake $HOME/nix-config#personalArm64";
+      nix-hm-linux =
+        "home-manager switch --flake $HOME/nix-config#personalx86Linux";
     };
 
     plugins = [{

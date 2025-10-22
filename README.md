@@ -56,9 +56,8 @@ nix develop
 
 ## Formatting
 ```bash
-# within the development shell
-nixfmt .
-nix-shell -p nixfmt --run "nixfmt ."
+# Format all Nix files
+nix run nixpkgs#nixfmt-classic -- ./**/*.nix
 ```
 
 

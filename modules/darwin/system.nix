@@ -36,7 +36,7 @@
       autohide = false;
       orientation = "left";
       tilesize = 128;
-      expose-group-by-app = false;
+      expose-group-apps = false;
       mru-spaces = false; # automatically re-order spaces
       showhidden = true;
     };

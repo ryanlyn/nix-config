@@ -14,7 +14,8 @@
       "Read(//nix/store/**)",
       "Bash(readlink:*)",
       "Bash(home-manager generations:*)",
-      "Bash(zsh -c \"source ~/.zshrc && alias | grep nix\")"
+      "Bash(zsh -c \"source ~/.zshrc && alias | grep nix\")",
+      "Bash(nixfmt-classic:*)"
     ],
     "deny": [],
     "ask": []
