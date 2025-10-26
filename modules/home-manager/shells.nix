@@ -43,7 +43,7 @@
     # pure prompt
     # initExtraBeforeCompInit = "autoload -U promptinit && promptinit && prompt pure";
     completionInit = "autoload -U compinit && compinit";
-    initExtra = ''
+    initContent = ''
       # powerlevel10k theme
       source ${pkgs.zsh-powerlevel10k}/share/zsh-powerlevel10k/powerlevel10k.zsh-theme
       [[ ! -f ${config.xdg.configHome}/p10k.zsh ]] || source ${config.xdg.configHome}/p10k.zsh
