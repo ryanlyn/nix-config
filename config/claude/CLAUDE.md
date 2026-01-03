@@ -1,19 +1,19 @@
 # Global Claude Code Guidelines
 
-## Environment
+## General Principles
 
-- This is a Nix-managed system using home-manager
-- Prefer declarative configuration over imperative changes
-- Use `nix` commands for package management
+- Prefer simple, straightforward solutions over clever ones
+- Make minimal changes to accomplish the task
+- Document non-obvious decisions with brief comments
 
 ## Coding Standards
 
-- Follow functional programming patterns where appropriate
-- Keep configurations modular and composable
-- Document non-obvious decisions
+- Follow existing patterns and conventions in each codebase
+- Write clear, self-documenting code
+- Avoid over-engineering or premature abstraction
 
-## Nix Conventions
+## Workflow
 
-- Use `nixfmt` for formatting Nix files
-- Prefer `home-manager` modules over raw dotfiles when available
-- Test changes with `home-manager build` before switching
+- Read and understand existing code before making changes
+- Test changes when test infrastructure is available
+- Commit atomic, focused changes with clear messages
