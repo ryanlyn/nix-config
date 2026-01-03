@@ -26,4 +26,14 @@
       #   };
     };
   };
+
+  # Claude Code configuration (~/.claude/)
+  home.file = {
+    ".claude/settings.json" = {
+      source = ../../config/claude/settings.json;
+    };
+    ".claude/CLAUDE.md" = {
+      source = ../../config/claude/CLAUDE.md;
+    };
+  };
 }
