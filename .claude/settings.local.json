@@ -3,7 +3,13 @@
     "allow": [
       "Bash(home-manager switch:*)",
       "Bash(nix search:*)",
-      "WebSearch"
+      "WebSearch",
+      "Bash(nix --version:*)",
+      "Bash(nix-channel:*)",
+      "Bash(. /home/ryan/.nix-profile/etc/profile.d/nix.sh)",
+      "Bash(ghostty --version:*)",
+      "Bash(nix flake lock:*)",
+      "Bash(snap install:*)"
     ],
     "deny": [],
     "ask": []

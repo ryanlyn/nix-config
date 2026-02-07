@@ -65,9 +65,9 @@
           };
         in homeManagerConfiguration rec {
           inherit pkgs;
+          extraSpecialArgs = { inherit inputs; };
           modules = baseModules ++ extraModules
             ++ [{ nixpkgs.overlays = overlays; }] ++ [
-              # extraSpecialArgs = { inherit inputs lib; };
               {
                 home = {
                   username = username;

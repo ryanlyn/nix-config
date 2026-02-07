@@ -94,6 +94,9 @@
       # direnv
       eval "$(${pkgs.direnv}/bin/direnv hook zsh)"
 
+      # local bin
+      export PATH="$HOME/.local/bin:$PATH"
+
       # google-cloud-sdk
       export PATH="$HOME/google-cloud-sdk/bin:$PATH"
 
