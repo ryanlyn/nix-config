@@ -18,14 +18,7 @@
     pkgs.nixpkgs-fmt
   ];
 
-  fonts.enableFontDir = false;
-  fonts.fonts = with pkgs; [
-    recursive
-    (nerdfonts.override { fonts = [ "JetBrainsMono" ]; })
-  ];
-
-  # Auto upgrade nix package and the daemon service.
-  services.nix-daemon.enable = true;
+  fonts.packages = with pkgs; [ recursive nerd-fonts.jetbrains-mono ];
 
   # Create /etc/bashrc that loads the nix-darwin environment.
   # programs.fish.enable = true;

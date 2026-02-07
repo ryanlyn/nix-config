@@ -25,6 +25,8 @@ nix build --extra-experimental-features 'flakes nix-command' --no-link '.#homeCo
 ```
 
 # Darwin Usage
+- `nix-ds` - Darwin rebuild (personalArm64)
+
 ```bash
 # switch
 darwin-rebuild switch --flake '.#personalArm64'
@@ -33,6 +35,10 @@ darwin-rebuild switch --flake '.#personalArm64'
 
 # Home Manager Usage
 Make sure `targets.genericLinux.enable = true;` is commented out.
+
+- `nix-hm-darwin` - Home Manager switch (personalArm64)
+- `nix-hm-linux` - Home Manager switch (personalx86Linux)
+
 ```bash
 # switch
 home-manager switch --flake '.#personalArm64'
@@ -40,13 +46,20 @@ home-manager switch --flake '.#personalArm64'
 home-manager build --flake '.#personalArm64'
 ```
 
-
 # Misc
 
+## Development Shell
+
+```bash
+nix develop
+```
+
 ## Formatting
+```bash
+# Format all Nix files
+nix run nixpkgs#nixfmt-classic -- ./**/*.nix
 ```
-nix-shell -p nixfmt --run "nixfmt ."
-```
+
 
 ## Updating Flakes
 ```bash

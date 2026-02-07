@@ -38,7 +38,7 @@
 
       baseDarwinConfig = { pkgs, ... }: {
         environment.darwinConfig = "./modules/darwin";
-        nix.package = pkgs.nixFlakes;
+        nix.package = pkgs.nixVersions.stable;
         nix.extraOptions =
           "\n          experimental-features = nix-command flakes\n          extra-platforms = aarch64-darwin x86_64-darwin\n        ";
       };
@@ -77,52 +77,64 @@
               }
             ];
         };
-    in {
+    in eachDefaultSystem (system:
+      let
+        pkgs = import nixpkgs {
+          inherit system;
+          overlays = overlays;
+        };
+      in {
+        devShells.default = pkgs.mkShell {
+          name = "nix-config";
+          packages = with pkgs;
+            [ git nixfmt-classic ]
+            ++ [ inputs.home-manager.packages.${system}.default ];
+        };
 
-      darwinConfigurations = {
-        personalx86 = mkDarwinConfig {
-          system = "x86_64-darwin";
-          # todo: add profiles
-          extraModules = [ ];
-        };
-        personalArm64 = mkDarwinConfig {
-          system = "aarch64-darwin";
-          extraModules = [ ];
-        };
-        canva = mkDarwinConfig {
-          # todo: add profiles
-          extraModules = [ ];
-        };
-      };
-
-      homeConfigurations = {
-        personalx86 = mkHomeConfig {
-          system = "x86_64-darwin";
-          username = "ryan";
-          extraModules = [ ];
-        };
-        personalx86Linux = mkHomeConfig {
-          system = "x86_64-linux";
-          username = "ryan";
-          extraModules = [ ];
-        };
-        personalArm64 = mkHomeConfig {
-          system = "aarch64-darwin";
-          username = "ryan";
-          extraModules = [ ];
-        };
-        canva = mkHomeConfig {
-          username = "ryan.l";
-          extraModules = [ ];
-        };
-      };
-
-      checks = listToAttrs ((map (system: {
-        name = system;
-        value = {
-          darwin =
+        checks = lib.optionalAttrs (isDarwin system) {
+          darwin = if system == "aarch64-darwin" then
+            self.darwinConfigurations.personalArm64.config.system.build.toplevel
+          else
             self.darwinConfigurations.personalx86.config.system.build.toplevel;
         };
-      }) lib.platforms.darwin));
-    };
+      }) // {
+
+        darwinConfigurations = {
+          personalx86 = mkDarwinConfig {
+            system = "x86_64-darwin";
+            # todo: add profiles
+            extraModules = [ ];
+          };
+          personalArm64 = mkDarwinConfig {
+            system = "aarch64-darwin";
+            extraModules = [ ];
+          };
+          canva = mkDarwinConfig {
+            # todo: add profiles
+            extraModules = [ ];
+          };
+        };
+
+        homeConfigurations = {
+          personalx86 = mkHomeConfig {
+            system = "x86_64-darwin";
+            username = "ryan";
+            extraModules = [ ];
+          };
+          personalx86Linux = mkHomeConfig {
+            system = "x86_64-linux";
+            username = "ryan";
+            extraModules = [ ];
+          };
+          personalArm64 = mkHomeConfig {
+            system = "aarch64-darwin";
+            username = "ryan";
+            extraModules = [ ];
+          };
+          canva = mkHomeConfig {
+            username = "ryan.l";
+            extraModules = [ ];
+          };
+        };
+      };
 }

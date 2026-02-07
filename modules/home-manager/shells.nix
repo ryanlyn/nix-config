@@ -43,7 +43,7 @@
     # pure prompt
     # initExtraBeforeCompInit = "autoload -U promptinit && promptinit && prompt pure";
     completionInit = "autoload -U compinit && compinit";
-    initExtra = ''
+    initContent = ''
       # powerlevel10k theme
       source ${pkgs.zsh-powerlevel10k}/share/zsh-powerlevel10k/powerlevel10k.zsh-theme
       [[ ! -f ${config.xdg.configHome}/p10k.zsh ]] || source ${config.xdg.configHome}/p10k.zsh
@@ -133,9 +133,12 @@
       la = "eza -la";
       ll = "eza -l";
       ls = "eza";
-      nix-ds = ''
-        darwin-rebuild switch -I "darwin-config=$HOME/nix-config/darwin.nix"'';
-      nix-hs = "home-manager -f $HOME/nix-config/home.nix switch";
+      # Keep host identifiers in sync with flake.nix and README.md.
+      nix-ds = "darwin-rebuild switch --flake $HOME/nix-config#personalArm64";
+      nix-hm-darwin =
+        "home-manager switch --flake $HOME/nix-config#personalArm64";
+      nix-hm-linux =
+        "home-manager switch --flake $HOME/nix-config#personalx86Linux";
     };
 
     plugins = [{
