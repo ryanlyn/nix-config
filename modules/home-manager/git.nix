@@ -71,11 +71,12 @@
         yeetu = "!git add -u && git commit -m '.' && git push";
         branch-name = "symbolic-ref --short HEAD";
         del-branch = "!git checkout master && git branch -d";
-        open-pr-link = "!open $(git pr-link)";
-        open-repo-link = "!open $(git repo-link)";
+        open-pr-link = "!open \"$(git pr-link)\"";
+        open-repo-link = "!open \"$(git repo-link)\"";
         publish =
-          "!git push -u origin $(git branch-name) && open $(git pr-link)";
-        pr-link = "!echo $(git repo-link)/compare/master...$(git branch-name)";
+          "!git push -u origin \"$(git branch-name)\" && open \"$(git pr-link)\"";
+        pr-link =
+          "!printf '%s\\n' \"$(git repo-link)/compare/master...$(git branch-name)\"";
         repo-link =
           "!git remote get-url origin | sed -n 's_.*:\\(.*\\)\\.git_https://github.com/\\1_p'";
       };
