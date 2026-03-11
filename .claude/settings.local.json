@@ -21,7 +21,16 @@
       "Bash(readlink:*)",
       "Bash(home-manager generations:*)",
       "Bash(zsh -c \"source ~/.zshrc && alias | grep nix\")",
-      "Bash(nixfmt-classic:*)"
+      "Bash(nixfmt-classic:*)",
+      "Bash(cd ~/nix-config && /run/current-system/sw/bin/darwin-rebuild switch --flake '.#personalArm64' 2>&1)",
+      "Bash(cd ~/nix-config && /nix/var/nix/profiles/system/sw/bin/darwin-rebuild switch --flake '.#personalArm64' 2>&1)",
+      "Bash(dscl . -list /Groups | grep nixbld 2>&1)",
+      "Bash(sudo launchctl:*)",
+      "Bash(mount | grep nix 2>&1)",
+      "Bash(/nix/var/nix/profiles/default/bin/nix --version 2>&1)",
+      "Bash(/nix/var/nix/profiles/system/sw/bin/nix --version 2>&1)",
+      "Bash(cd ~/nix-config && /nix/var/nix/profiles/default/bin/nix build '.#darwinConfigurations.personalArm64.config.system.build.toplevel' 2>&1)",
+      "Bash(cd ~/nix-config && ./result/sw/bin/darwin-rebuild switch --flake '.#personalArm64' 2>&1)"
     ],
     "deny": [],
     "ask": []

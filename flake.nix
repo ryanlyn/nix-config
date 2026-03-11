@@ -43,7 +43,7 @@
           "\n          experimental-features = nix-command flakes\n          extra-platforms = aarch64-darwin x86_64-darwin\n        ";
       };
 
-      mkDarwinConfig = { system ? "x86_64-darwin", baseModules ? [
+      mkDarwinConfig = { username, system ? "x86_64-darwin", baseModules ? [
         home-manager.darwinModules.home-manager
         baseDarwinConfig
         ./modules/darwin
@@ -51,8 +51,10 @@
 
         darwinSystem {
           system = system;
-          modules = baseModules ++ extraModules
-            ++ [{ nixpkgs.overlays = overlays; }];
+          modules = baseModules ++ extraModules ++ [{
+            nixpkgs.overlays = overlays;
+            system.primaryUser = username;
+          }];
           specialArgs = { inherit inputs lib; };
         };
 
@@ -67,15 +69,13 @@
           inherit pkgs;
           extraSpecialArgs = { inherit inputs; };
           modules = baseModules ++ extraModules
-            ++ [{ nixpkgs.overlays = overlays; }] ++ [
-              {
-                home = {
-                  username = username;
-                  homeDirectory = "${homePrefix system}/${username}";
-                  stateVersion = "21.11";
-                };
-              }
-            ];
+            ++ [{ nixpkgs.overlays = overlays; }] ++ [{
+              home = {
+                username = username;
+                homeDirectory = "${homePrefix system}/${username}";
+                stateVersion = "21.11";
+              };
+            }];
         };
     in eachDefaultSystem (system:
       let
@@ -101,15 +101,18 @@
 
         darwinConfigurations = {
           personalx86 = mkDarwinConfig {
+            username = "ryan";
             system = "x86_64-darwin";
             # todo: add profiles
             extraModules = [ ];
           };
           personalArm64 = mkDarwinConfig {
+            username = "ryan";
             system = "aarch64-darwin";
             extraModules = [ ];
           };
           canva = mkDarwinConfig {
+            username = "ryan.l";
             # todo: add profiles
             extraModules = [ ];
           };
