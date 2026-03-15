@@ -35,7 +35,8 @@
       "Bash(mkdir:*)",
       "Bash(nix build:*)",
       "Bash(./result/sw/bin/darwin-rebuild switch:*)",
-      "Bash(sudo ./result/sw/bin/darwin-rebuild switch --flake '.#personalArm64' 2>&1)"
+      "Bash(sudo ./result/sw/bin/darwin-rebuild switch --flake '.#personalArm64' 2>&1)",
+      "Bash(nix-shell:*)"
     ],
     "deny": [],
     "ask": []
