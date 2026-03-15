@@ -75,6 +75,7 @@
                 homeDirectory = "${homePrefix system}/${username}";
                 stateVersion = "21.11";
               };
+              targets.genericLinux.enable = !isDarwin system;
             }];
         };
     in eachDefaultSystem (system:
@@ -110,6 +111,17 @@
             username = "ryan";
             system = "aarch64-darwin";
             extraModules = [ ];
+          };
+          personalArm64MacMini = mkDarwinConfig {
+            username = "ryan";
+            system = "aarch64-darwin";
+            extraModules = [
+              { ids.gids.nixbld = 350; }
+              {
+                system.defaults.dock.orientation = nixpkgs.lib.mkForce "bottom";
+                system.defaults.dock.tilesize = nixpkgs.lib.mkForce 42;
+              }
+            ];
           };
           canva = mkDarwinConfig {
             username = "ryan.l";

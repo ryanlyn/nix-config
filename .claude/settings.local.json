@@ -31,7 +31,11 @@
       "Bash(/nix/var/nix/profiles/system/sw/bin/nix --version 2>&1)",
       "Bash(cd ~/nix-config && /nix/var/nix/profiles/default/bin/nix build '.#darwinConfigurations.personalArm64.config.system.build.toplevel' 2>&1)",
       "Bash(cd ~/nix-config && ./result/sw/bin/darwin-rebuild switch --flake '.#personalArm64' 2>&1)",
-      "Bash(cd ~/nix-config && home-manager switch --flake '.#personalArm64' -b backup 2>&1)"
+      "Bash(cd ~/nix-config && home-manager switch --flake '.#personalArm64' -b backup 2>&1)",
+      "Bash(mkdir:*)",
+      "Bash(nix build:*)",
+      "Bash(./result/sw/bin/darwin-rebuild switch:*)",
+      "Bash(sudo ./result/sw/bin/darwin-rebuild switch --flake '.#personalArm64' 2>&1)"
     ],
     "deny": [],
     "ask": []
