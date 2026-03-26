@@ -50,7 +50,19 @@
     '';
     envExtra = ''
       # secrets
-      if [ -e $HOME/.secrets ]; then source $HOME/.secrets; fi
+      # Import simple KEY=VALUE pairs without executing arbitrary shell code.
+      if [ -r "$HOME/.secrets" ]; then
+        while IFS= read -r line; do
+          case "$line" in
+            ""|\#*)
+              continue
+              ;;
+            [A-Za-z_][A-Za-z0-9_]*=*)
+              export "$line"
+              ;;
+          esac
+        done < "$HOME/.secrets"
+      fi
 
       # nix
       if [ -e $HOME/.nix-profile/etc/profile.d/nix.sh ]; then . $HOME/.nix-profile/etc/profile.d/nix.sh; fi
