@@ -42,6 +42,7 @@
   programs.direnv = {
     enable = true;
     enableZshIntegration = true;
+    mise.enable = true;
     nix-direnv.enable = true;
   };
 
@@ -80,6 +81,11 @@
       background-blur = 16;
       macos-titlebar-style = "tabs";
     };
+  };
+
+  programs.mise = {
+    enable = true;
+    enableZshIntegration = true;
   };
 
   programs.zoxide = {
