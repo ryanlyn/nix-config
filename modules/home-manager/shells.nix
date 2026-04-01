@@ -52,11 +52,16 @@
       # secrets
       # Import simple KEY=VALUE pairs without executing arbitrary shell code.
       if [ -r "$HOME/.secrets" ]; then
-        while IFS= read -r line; do
+        while IFS= read -r line || [ -n "$line" ]; do
           case "$line" in
             ""|\#*)
               continue
               ;;
+            export\ *)
+              line=''${line#export }
+              ;;
+          esac
+          case "$line" in
             [A-Za-z_][A-Za-z0-9_]*=*)
               export "$line"
               ;;
@@ -166,6 +171,10 @@
     oh-my-zsh = {
       enable = true;
       theme = "";
+      extraConfig = ''
+        : ''${ZSH:=${pkgs.oh-my-zsh}/share/oh-my-zsh}
+        : ''${ZSH_CACHE_DIR:=${config.xdg.cacheHome}/oh-my-zsh}
+      '';
       # pure prompt config:
       # extraConfig = "zstyle :prompt:pure:git:stash show yes";
       plugins = [

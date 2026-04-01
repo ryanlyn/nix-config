@@ -1,7 +1,14 @@
 { config, lib, pkgs, ... }:
 
 {
-  imports = [ ./config.nix ./git.nix ./languages.nix ./shells.nix ./tools.nix ];
+  imports = [
+    ./config.nix
+    ./git.nix
+    ./languages.nix
+    ./package-managers.nix
+    ./shells.nix
+    ./tools.nix
+  ];
 
   nixpkgs = {
     config = {

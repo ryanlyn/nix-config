@@ -4,7 +4,6 @@
   home.packages = [
     # python
     pkgs.pipenv
-    pkgs.uv
     (pkgs.python311.withPackages (p: [
       # p.black # disable: broken python3.10-uvloop-0.16.0.drv dependency
       p.flake8
