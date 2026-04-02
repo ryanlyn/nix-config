@@ -9,6 +9,7 @@ on:
 
 jobs:
   nix-flake-check:
+    timeout-minutes: 5
     name: nix flake check (${{ matrix.os }})
     strategy:
       fail-fast: false
