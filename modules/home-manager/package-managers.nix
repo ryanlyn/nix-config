@@ -11,12 +11,12 @@
     minimum-release-age=10080
   '';
 
-  home.file = lib.mkMerge [{
-    ".npmrc".text = ''
-      min-release-age=7
-      ignore-scripts=true
-    '';
+  home.sessionVariables = {
+    NPM_CONFIG_IGNORE_SCRIPTS = "true";
+    NPM_CONFIG_MIN_RELEASE_AGE = "7";
+  };
 
+  home.file = lib.mkMerge [{
     ".bunfig.toml".text = ''
       [install]
       minimumReleaseAge = 604800
