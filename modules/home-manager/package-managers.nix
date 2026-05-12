@@ -14,6 +14,7 @@
   home.sessionVariables = {
     NPM_CONFIG_IGNORE_SCRIPTS = "true";
     NPM_CONFIG_MIN_RELEASE_AGE = "7";
+    PIP_UPLOADED_PRIOR_TO = "P7D";
   };
 
   home.file = lib.mkMerge [{
