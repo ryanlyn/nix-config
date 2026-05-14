@@ -22,6 +22,9 @@
     # rust
     pkgs.rustup
 
+    # deno
+    pkgs.deno
+
     # terraform
     pkgs.terraform
     pkgs.tflint
