@@ -25,6 +25,9 @@
     # deno
     pkgs.deno
 
+    # bun
+    pkgs.bun
+
     # terraform
     pkgs.terraform
     pkgs.tflint
