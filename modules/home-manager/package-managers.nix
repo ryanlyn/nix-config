@@ -1,7 +1,7 @@
 { lib, pkgs, ... }:
 
 {
-  home.packages = [ pkgs.uv ];
+  home.packages = [ pkgs.uv pkgs.pnpm pkgs.deno pkgs.bun ];
 
   xdg.configFile."uv/uv.toml".text = ''
     exclude-newer = "7 days"
