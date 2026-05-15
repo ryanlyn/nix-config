@@ -146,6 +146,7 @@
     };
 
     shellAliases = {
+      cc = "claude --dangerously-skip-permissions";
       garbage = "nix-collect-garbage -d && docker image prune --force";
       la = "eza -la";
       ll = "eza -l";
