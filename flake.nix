@@ -58,7 +58,7 @@
           specialArgs = { inherit inputs lib; };
         };
 
-      mkHomeConfig = { username, system ? "x86_64-darwin"
+      mkHomeConfig = { username, system ? "x86_64-darwin", profile ? "personal"
         , baseModules ? [ ./modules/home-manager ], extraModules ? [ ] }:
         let
           pkgs = import inputs.nixpkgs {
@@ -75,6 +75,7 @@
                 homeDirectory = "${homePrefix system}/${username}";
                 stateVersion = "21.11";
               };
+              ryan.identity.profile = profile;
               targets.genericLinux.enable = !isDarwin system;
             }];
         };
@@ -92,11 +93,35 @@
             ++ [ inputs.home-manager.packages.${system}.default ];
         };
 
-        checks = lib.optionalAttrs (isDarwin system) {
-          darwin = if system == "aarch64-darwin" then
-            self.darwinConfigurations.personalArm64.config.system.build.toplevel
-          else
+        checks = {
+          format = pkgs.runCommand "nixfmt-check" {
+            nativeBuildInputs = [ pkgs.nixfmt-classic ];
+            src = self;
+          } ''
+            cd "$src"
+            nixfmt --check $(find . -name '*.nix' -not -path './.git/*')
+            touch "$out"
+          '';
+        } // lib.optionalAttrs (system == "aarch64-darwin") {
+          darwin-personalArm64 =
+            self.darwinConfigurations.personalArm64.config.system.build.toplevel;
+          darwin-personalArm64MacMini =
+            self.darwinConfigurations.personalArm64MacMini.config.system.build.toplevel;
+          home-personalArm64 =
+            self.homeConfigurations.personalArm64.activationPackage;
+          home-personalArm64MacMini =
+            self.homeConfigurations.personalArm64MacMini.activationPackage;
+        } // lib.optionalAttrs (system == "x86_64-darwin") {
+          darwin-personalx86 =
             self.darwinConfigurations.personalx86.config.system.build.toplevel;
+          darwin-canva =
+            self.darwinConfigurations.canva.config.system.build.toplevel;
+          home-personalx86 =
+            self.homeConfigurations.personalx86.activationPackage;
+          home-canva = self.homeConfigurations.canva.activationPackage;
+        } // lib.optionalAttrs (system == "x86_64-linux") {
+          home-personalx86Linux =
+            self.homeConfigurations.personalx86Linux.activationPackage;
         };
       }) // {
 
@@ -146,8 +171,14 @@
             username = "ryan";
             extraModules = [ ];
           };
+          personalArm64MacMini = mkHomeConfig {
+            system = "aarch64-darwin";
+            username = "ryan";
+            extraModules = [ ];
+          };
           canva = mkHomeConfig {
             username = "ryan.l";
+            profile = "canva";
             extraModules = [ ];
           };
         };

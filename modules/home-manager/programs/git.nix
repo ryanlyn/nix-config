@@ -1,7 +1,7 @@
-{ pkgs, lib, ... }:
+{ config, lib, pkgs, ... }:
 
-{
-  # git
+let identity = config.ryan.identity;
+in lib.mkIf config.ryan.features.programs.enable {
   programs.git = {
     package = pkgs.gitFull;
     enable = true;
@@ -10,8 +10,8 @@
 
     settings = {
       user = {
-        name = "ryanlyn";
-        email = "mailboxryanlin@icloud.com";
+        name = identity.gitUserName;
+        email = identity.gitEmail;
       };
 
       alias = {
@@ -83,7 +83,7 @@
 
       core.editor = "nvim";
       diff.colorMove = "default";
-      github.user = "ryanlyn";
+      github.user = identity.githubUser;
       merge.conflictStyle = "diff3";
       pull.ff = "only";
       rebase.autosquash = true;
@@ -91,7 +91,6 @@
     };
   };
 
-  # Enhanced diffs
   programs.delta = {
     enable = true;
     enableGitIntegration = true;
@@ -112,7 +111,6 @@
     };
   };
 
-  # github
   programs.gh = {
     enable = true;
     settings = {

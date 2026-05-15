@@ -1,0 +1,54 @@
+name: Smoke Build
+
+on:
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  smoke-build:
+    name: ${{ matrix.name }}
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - name: home personalx86Linux
+            os: ubuntu-latest
+            target: homeConfigurations.personalx86Linux.activationPackage
+          - name: darwin personalArm64
+            os: macos-15
+            target: darwinConfigurations.personalArm64.config.system.build.toplevel
+          - name: darwin personalArm64MacMini
+            os: macos-15
+            target: darwinConfigurations.personalArm64MacMini.config.system.build.toplevel
+          - name: home personalArm64
+            os: macos-15
+            target: homeConfigurations.personalArm64.activationPackage
+          - name: home personalArm64MacMini
+            os: macos-15
+            target: homeConfigurations.personalArm64MacMini.activationPackage
+          - name: darwin personalx86
+            os: macos-15-intel
+            target: darwinConfigurations.personalx86.config.system.build.toplevel
+          - name: darwin canva
+            os: macos-15-intel
+            target: darwinConfigurations.canva.config.system.build.toplevel
+          - name: home personalx86
+            os: macos-15-intel
+            target: homeConfigurations.personalx86.activationPackage
+          - name: home canva
+            os: macos-15-intel
+            target: homeConfigurations.canva.activationPackage
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install Nix
+        uses: DeterminateSystems/nix-installer-action@v21
+
+      - name: Use Determinate Systems cache
+        uses: DeterminateSystems/magic-nix-cache-action@v2
+
+      - name: Build profile
+        run: scripts/smoke-build-profile.sh "${{ matrix.target }}"

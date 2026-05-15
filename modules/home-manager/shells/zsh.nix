@@ -1,23 +1,6 @@
-{ config, pkgs, lib, ... }: {
-  # external themes
-  programs.starship = {
-    enable = false;
-    enableZshIntegration = false;
+{ config, lib, pkgs, ... }:
 
-    # See docs here: https://starship.rs/config/
-    # Symbols config configured in Flake.
-    settings = {
-      battery.display.threshold =
-        25; # display battery information if charge is <= 25%
-      directory.fish_style_pwd_dir_length =
-        1; # turn on fish directory truncation
-      directory.truncation_length = 2; # number of directories not to truncate
-      memory_usage.disabled =
-        true; # because it includes cached memory it's reported as full a lot
-    };
-  };
-
-  # zsh
+lib.mkIf config.ryan.features.shell.enable {
   home.packages = [
     # powerlevel10k font
     pkgs.meslo-lgs-nf
@@ -73,11 +56,11 @@
       if [ -e $HOME/.nix-profile/etc/profile.d/nix.sh ]; then . $HOME/.nix-profile/etc/profile.d/nix.sh; fi
 
       # home-manager
-      . $HOME/.nix-profile/etc/profile.d/hm-session-vars.sh 
+      . $HOME/.nix-profile/etc/profile.d/hm-session-vars.sh
 
       # homebrew
       # nix-darwin bug with apple silicon - requires homebrew to be installed and linked manually
-      if [[ $OSTYPE == darwin* ]]; then 
+      if [[ $OSTYPE == darwin* ]]; then
           eval "$(/opt/homebrew/bin/brew shellenv)"
       fi
 
@@ -153,8 +136,12 @@
       ls = "eza";
       # Keep host identifiers in sync with flake.nix and README.md.
       nix-ds = "darwin-rebuild switch --flake $HOME/nix-config#personalArm64";
+      nix-ds-mini =
+        "darwin-rebuild switch --flake $HOME/nix-config#personalArm64MacMini";
       nix-hm-darwin =
         "home-manager switch --flake $HOME/nix-config#personalArm64";
+      nix-hm-darwin-mini =
+        "home-manager switch --flake $HOME/nix-config#personalArm64MacMini";
       nix-hm-linux =
         "home-manager switch --flake $HOME/nix-config#personalx86Linux";
     };
@@ -182,7 +169,7 @@
         "git"
 
         # fzf not needed since automatically installed:
-        # "fzf" 
+        # "fzf"
       ];
     };
 

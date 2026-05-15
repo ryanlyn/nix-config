@@ -1,6 +1,6 @@
-{ pkgs, ... }:
+{ config, lib, pkgs, ... }:
 
-{
+lib.mkIf config.ryan.features.languages.enable {
   home.packages = [
     # python
     pkgs.pipenv
