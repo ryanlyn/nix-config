@@ -1,6 +1,6 @@
 { config, lib, ... }:
 
-lib.mkIf config.ryan.features.programs.enable {
+lib.mkIf config.local.features.programs.enable {
   programs.fzf = {
     enable = true;
     enableZshIntegration = true;

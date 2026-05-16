@@ -1,6 +1,6 @@
 { config, lib, pkgs, ... }:
 
-lib.mkIf config.ryan.features.shell.enable {
+lib.mkIf config.local.features.shell.enable {
   home.packages = [
     # powerlevel10k font
     pkgs.meslo-lgs-nf
@@ -31,89 +31,111 @@ lib.mkIf config.ryan.features.shell.enable {
       source ${pkgs.zsh-powerlevel10k}/share/zsh-powerlevel10k/powerlevel10k.zsh-theme
       [[ ! -f ${config.xdg.configHome}/p10k.zsh ]] || source ${config.xdg.configHome}/p10k.zsh
     '';
-    envExtra = ''
-      # secrets
-      # Import simple KEY=VALUE pairs without executing arbitrary shell code.
-      if [ -r "$HOME/.secrets" ]; then
-        while IFS= read -r line || [ -n "$line" ]; do
-          case "$line" in
-            ""|\#*)
-              continue
-              ;;
-            export\ *)
-              line=''${line#export }
-              ;;
-          esac
-          case "$line" in
-            [A-Za-z_][A-Za-z0-9_]*=*)
-              export "$line"
-              ;;
-          esac
-        done < "$HOME/.secrets"
-      fi
+    envExtra = lib.concatStringsSep "\n" ([
+      ''
+        # secrets
+        # Import simple KEY=VALUE pairs without executing arbitrary shell code.
+        if [ -r "$HOME/.secrets" ]; then
+          while IFS= read -r line || [ -n "$line" ]; do
+            case "$line" in
+              ""|\#*)
+                continue
+                ;;
+              export\ *)
+                line=''${line#export }
+                ;;
+            esac
+            case "$line" in
+              [A-Za-z_][A-Za-z0-9_]*=*)
+                export "$line"
+                ;;
+            esac
+          done < "$HOME/.secrets"
+        fi
+      ''
 
-      # nix
-      if [ -e $HOME/.nix-profile/etc/profile.d/nix.sh ]; then . $HOME/.nix-profile/etc/profile.d/nix.sh; fi
+      ''
+        # nix
+        if [ -e $HOME/.nix-profile/etc/profile.d/nix.sh ]; then . $HOME/.nix-profile/etc/profile.d/nix.sh; fi
+      ''
 
-      # home-manager
-      . $HOME/.nix-profile/etc/profile.d/hm-session-vars.sh
+      ''
+        # home-manager
+        if [ -e $HOME/.nix-profile/etc/profile.d/hm-session-vars.sh ]; then . $HOME/.nix-profile/etc/profile.d/hm-session-vars.sh; fi
+      ''
 
-      # homebrew
-      # nix-darwin bug with apple silicon - requires homebrew to be installed and linked manually
-      if [[ $OSTYPE == darwin* ]]; then
-          eval "$(/opt/homebrew/bin/brew shellenv)"
-      fi
+      ''
+        # direnv
+        eval "$(${pkgs.direnv}/bin/direnv hook zsh)"
+      ''
 
-      # nvm (homebrew)
-      if [ -e $HOME/.nvm ]; then
-          export NVM_DIR=~/.nvm
-          source $(brew --prefix nvm)/nvm.sh
-      fi
+      ''
+        # local bin
+        export PATH="$HOME/.local/bin:$PATH"
+      ''
 
-      # nvm (linux)
-      if [ -e $HOME/.config/nvm ]; then
-        export NVM_DIR="$HOME/.config/nvm"
-        . $NVM_DIR/nvm.sh
-        . $NVM_DIR/bash_completion
-      fi
+      ''
+        # google-cloud-sdk
+        export PATH="$HOME/google-cloud-sdk/bin:$PATH"
+      ''
 
-      # bun (linux)
-      if [ -e $HOME/.bun ]; then
-        export BUN_INSTALL="$HOME/.bun"
-        export PATH=$BUN_INSTALL/bin:$PATH
-      fi
+      ''
+        # >>> conda initialize >>>
+        __conda_setup="$("$HOME/miniconda3/bin/conda" 'shell.bash' 'hook' 2> /dev/null)"
+        if [ $? -eq 0 ]; then
+            eval "$__conda_setup"
+        else
+            if [ -f "$HOME/miniconda3/etc/profile.d/conda.sh" ]; then
+                . "$HOME/miniconda3/etc/profile.d/conda.sh"
+            else
+                export PATH="$HOME/miniconda3/bin:$PATH"
+            fi
+        fi
+        unset __conda_setup
+        # <<< conda initialize <<<
+      ''
+    ] ++ lib.optionals pkgs.stdenv.isDarwin [
+      ''
+        # homebrew
+        # nix-darwin bug with apple silicon - requires homebrew to be installed and linked manually
+        if [ -x /opt/homebrew/bin/brew ]; then
+            eval "$(/opt/homebrew/bin/brew shellenv)"
+        fi
+      ''
 
-      # cuda (only installed on linux)
-      # /usr/local/cuda is a symlink to /usr/local/cuda-X.X
-      if [ -e /usr/local/cuda ]; then
-          export PATH=/usr/local/cuda/bin:$PATH
-          # managed by nix
-          # export LD_LIBRARY_PATH=/usr/local/cuda/lib64:$LD_LIBRARY_PATH
-      fi
+      ''
+        # nvm (homebrew)
+        if [ -e $HOME/.nvm ] && command -v brew >/dev/null 2>&1; then
+            export NVM_DIR=~/.nvm
+            source $(brew --prefix nvm)/nvm.sh
+        fi
+      ''
+    ] ++ lib.optionals pkgs.stdenv.isLinux [
+      ''
+        # nvm (linux)
+        if [ -e $HOME/.config/nvm ]; then
+          export NVM_DIR="$HOME/.config/nvm"
+          . $NVM_DIR/nvm.sh
+          . $NVM_DIR/bash_completion
+        fi
+      ''
 
-      # direnv
-      eval "$(${pkgs.direnv}/bin/direnv hook zsh)"
+      ''
+        # bun (linux)
+        if [ -e $HOME/.bun ]; then
+          export BUN_INSTALL="$HOME/.bun"
+          export PATH=$BUN_INSTALL/bin:$PATH
+        fi
+      ''
 
-      # local bin
-      export PATH="$HOME/.local/bin:$PATH"
-
-      # google-cloud-sdk
-      export PATH="$HOME/google-cloud-sdk/bin:$PATH"
-
-      # >>> conda initialize >>>
-      __conda_setup="$("$HOME/miniconda3/bin/conda" 'shell.bash' 'hook' 2> /dev/null)"
-      if [ $? -eq 0 ]; then
-          eval "$__conda_setup"
-      else
-          if [ -f "$HOME/miniconda3/etc/profile.d/conda.sh" ]; then
-              . "$HOME/miniconda3/etc/profile.d/conda.sh"
-          else
-              export PATH="$HOME/miniconda3/bin:$PATH"
-          fi
-      fi
-      unset __conda_setup
-      # <<< conda initialize <<<
-    '';
+      ''
+        # cuda
+        # /usr/local/cuda is a symlink to /usr/local/cuda-X.X
+        if [ -e /usr/local/cuda ]; then
+            export PATH=/usr/local/cuda/bin:$PATH
+        fi
+      ''
+    ]);
     loginExtra = ''
       # neofetch
     '';
@@ -123,6 +145,7 @@ lib.mkIf config.ryan.features.shell.enable {
       LC_CTYPE = "en_AU.UTF-8";
       LESSCHARSET = "utf-8";
       TERM = "xterm-256color";
+    } // lib.optionalAttrs pkgs.stdenv.isLinux {
       LD_LIBRARY_PATH = "/usr/local/cuda/lib64";
       # If you need to add Nix packages to LD_LIBRARY_PATH in the future, use:
       # LD_LIBRARY_PATH = "/usr/local/cuda/lib64:${lib.makeLibraryPath [ pkgs.gcc-unwrapped ]}";

@@ -2,7 +2,7 @@
 
 let inherit (lib) mkEnableOption mkOption types;
 in {
-  options.ryan.features = {
+  options.local.features = {
     packageManagers.enable = mkEnableOption "package-manager tooling" // {
       default = true;
     };

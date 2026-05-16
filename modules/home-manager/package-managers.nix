@@ -1,7 +1,7 @@
 { config, lib, pkgs, ... }:
 
 let
-  cfg = config.ryan.features;
+  cfg = config.local.features;
   releaseAgeDays = cfg.releaseAge.days;
   releaseAgeMinutes = releaseAgeDays * 24 * 60;
   releaseAgeSeconds = releaseAgeDays * 24 * 60 * 60;

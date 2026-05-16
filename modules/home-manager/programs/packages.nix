@@ -1,6 +1,7 @@
 { config, lib, pkgs, ... }:
 
-lib.mkIf config.ryan.features.programs.enable {
+let isX86Linux = pkgs.stdenv.hostPlatform.system == "x86_64-linux";
+in lib.mkIf config.local.features.programs.enable {
   home.packages = [
     pkgs.awscli2
     pkgs.bandwhich
@@ -10,7 +11,6 @@ lib.mkIf config.ryan.features.programs.enable {
     pkgs.curl
     pkgs.direnv
     pkgs.devbox
-    # pkgs.dust  # disable: unavailable on arm64
     pkgs.eza
     pkgs.fd
     # prefer non-hermetic installation because of gcloud plugins
@@ -32,5 +32,5 @@ lib.mkIf config.ryan.features.programs.enable {
     pkgs.vim
     pkgs.unzip
     pkgs.wget
-  ];
+  ] ++ lib.optionals isX86Linux [ pkgs.dust ];
 }

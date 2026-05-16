@@ -1,7 +1,7 @@
 { config, lib, pkgs, ... }:
 
-let identity = config.ryan.identity;
-in lib.mkIf config.ryan.features.programs.enable {
+let identity = config.local.identity;
+in lib.mkIf config.local.features.programs.enable {
   programs.git = {
     package = pkgs.gitFull;
     enable = true;

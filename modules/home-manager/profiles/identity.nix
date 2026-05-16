@@ -2,13 +2,7 @@
 
 let inherit (lib) mkOption types;
 in {
-  options.ryan.identity = {
-    profile = mkOption {
-      type = types.enum [ "personal" "canva" ];
-      default = "personal";
-      description = "Profile identity used by shared Home Manager modules.";
-    };
-
+  options.local.identity = {
     gitUserName = mkOption {
       type = types.str;
       default = "ryanlyn";

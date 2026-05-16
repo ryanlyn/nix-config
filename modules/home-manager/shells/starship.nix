@@ -1,6 +1,6 @@
 { config, lib, ... }:
 
-lib.mkIf config.ryan.features.shell.enable {
+lib.mkIf config.local.features.shell.enable {
   programs.starship = {
     enable = false;
     enableZshIntegration = false;

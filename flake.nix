@@ -23,16 +23,14 @@
 
     let
       inherit (darwin.lib) darwinSystem;
-      inherit (nixpkgs.lib) nixosSystem;
       inherit (home-manager.lib) homeManagerConfiguration;
-      inherit (flake-utils.lib) eachDefaultSystem eachSystem;
-      inherit (builtins) listToAttrs map;
+      inherit (flake-utils.lib) eachSystem;
 
       lib = nixpkgs.lib // home-manager.lib;
 
       overlays = [ ];
 
-      supportedSystems = [ "aarch64-darwin" "x86_64-darwin" "x86_64-linux" ];
+      supportedSystems = [ "aarch64-darwin" "x86_64-linux" ];
       isDarwin = system: (builtins.elem system lib.platforms.darwin);
       homePrefix = system: if isDarwin system then "/Users" else "/home";
 
@@ -40,10 +38,10 @@
         environment.darwinConfig = "./modules/darwin";
         nix.package = pkgs.nixVersions.stable;
         nix.extraOptions =
-          "\n          experimental-features = nix-command flakes\n          extra-platforms = aarch64-darwin x86_64-darwin\n        ";
+          "\n          experimental-features = nix-command flakes\n        ";
       };
 
-      mkDarwinConfig = { username, system ? "x86_64-darwin", baseModules ? [
+      mkDarwinConfig = { username, system ? "aarch64-darwin", baseModules ? [
         home-manager.darwinModules.home-manager
         baseDarwinConfig
         ./modules/darwin
@@ -58,7 +56,7 @@
           specialArgs = { inherit inputs lib; };
         };
 
-      mkHomeConfig = { username, system ? "x86_64-darwin", profile ? "personal"
+      mkHomeConfig = { username, system ? "aarch64-darwin"
         , baseModules ? [ ./modules/home-manager ], extraModules ? [ ] }:
         let
           pkgs = import inputs.nixpkgs {
@@ -75,11 +73,10 @@
                 homeDirectory = "${homePrefix system}/${username}";
                 stateVersion = "21.11";
               };
-              ryan.identity.profile = profile;
               targets.genericLinux.enable = !isDarwin system;
             }];
         };
-    in eachDefaultSystem (system:
+    in eachSystem supportedSystems (system:
       let
         pkgs = import nixpkgs {
           inherit system;
@@ -111,14 +108,6 @@
             self.homeConfigurations.personalArm64.activationPackage;
           home-personalArm64MacMini =
             self.homeConfigurations.personalArm64MacMini.activationPackage;
-        } // lib.optionalAttrs (system == "x86_64-darwin") {
-          darwin-personalx86 =
-            self.darwinConfigurations.personalx86.config.system.build.toplevel;
-          darwin-canva =
-            self.darwinConfigurations.canva.config.system.build.toplevel;
-          home-personalx86 =
-            self.homeConfigurations.personalx86.activationPackage;
-          home-canva = self.homeConfigurations.canva.activationPackage;
         } // lib.optionalAttrs (system == "x86_64-linux") {
           home-personalx86Linux =
             self.homeConfigurations.personalx86Linux.activationPackage;
@@ -126,12 +115,6 @@
       }) // {
 
         darwinConfigurations = {
-          personalx86 = mkDarwinConfig {
-            username = "ryan";
-            system = "x86_64-darwin";
-            # todo: add profiles
-            extraModules = [ ];
-          };
           personalArm64 = mkDarwinConfig {
             username = "ryan";
             system = "aarch64-darwin";
@@ -148,19 +131,9 @@
               }
             ];
           };
-          canva = mkDarwinConfig {
-            username = "ryan.l";
-            # todo: add profiles
-            extraModules = [ ];
-          };
         };
 
         homeConfigurations = {
-          personalx86 = mkHomeConfig {
-            system = "x86_64-darwin";
-            username = "ryan";
-            extraModules = [ ];
-          };
           personalx86Linux = mkHomeConfig {
             system = "x86_64-linux";
             username = "ryan";
@@ -174,11 +147,6 @@
           personalArm64MacMini = mkHomeConfig {
             system = "aarch64-darwin";
             username = "ryan";
-            extraModules = [ ];
-          };
-          canva = mkHomeConfig {
-            username = "ryan.l";
-            profile = "canva";
             extraModules = [ ];
           };
         };
