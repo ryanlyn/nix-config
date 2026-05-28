@@ -1,6 +1,6 @@
-{ pkgs, ... }:
+{ config, lib, pkgs, ... }:
 
-{
+lib.mkIf config.local.features.languages.enable {
   home.packages = [
     # python
     pkgs.pipenv
@@ -16,7 +16,6 @@
 
     # haskell
     pkgs.ghc
-    # pkgs.haskellPackages.haskell-language-server  # disable: circular dependency on arm64
     pkgs.stack
 
     # rust

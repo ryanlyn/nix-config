@@ -3,11 +3,12 @@
 {
   imports = [
     ./config.nix
-    ./git.nix
+    ./features
     ./languages.nix
     ./package-managers.nix
-    ./shells.nix
-    ./tools.nix
+    ./profiles/identity.nix
+    ./programs
+    ./shells
   ];
 
   nixpkgs = {

@@ -9,7 +9,7 @@ on:
 
 jobs:
   nix-flake-check:
-    timeout-minutes: 5
+    timeout-minutes: 30
     name: nix flake check (${{ matrix.os }})
     strategy:
       fail-fast: false
@@ -30,6 +30,12 @@ jobs:
 
       - name: Show Nix version
         run: nix --version
+
+      - name: Check Nix formatting
+        run: nix develop -c scripts/check-format.sh
+
+      - name: Evaluate profile targets
+        run: scripts/eval-profiles.sh
 
       - name: nix flake check
         run: nix flake check
