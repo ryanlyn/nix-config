@@ -3,6 +3,7 @@
 
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
+    nixpkgs-uv.url = "github:nixos/nixpkgs/nixos-unstable";
 
     flake-compat = {
       url = "github:edolstra/flake-compat";
