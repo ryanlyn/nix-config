@@ -49,12 +49,14 @@ home-manager switch --flake '.#personalx86Linux'
 
 ## zmx SSH Sessions
 
-Home Manager installs `autossh`. Put `.zmx.` between a host and session to
-attach through zmx with SSH connection multiplexing and keepalives. Use `ash`
-for an automatically reconnecting connection:
+Home Manager installs `autossh`. Append `.zmx` to use the `default` session or
+`.zmx.<session>` to select a named session. Connections use zmx with SSH
+multiplexing and keepalives. Use `ash` for automatic reconnection:
 
 ```bash
+ssh user@host.zmx
 ssh user@host.zmx.session
+ash user@host.zmx
 ash user@host.zmx.session
 ```
 

@@ -48,8 +48,15 @@ lib.mkIf config.local.features.shell.enable {
         local command_name=$2
         local target=$3
 
-        local host=''${target%%.zmx.*}
-        local session=''${target#*.zmx.}
+        local host
+        local session
+        if [[ $target == *.zmx ]]; then
+          host=''${target%.zmx}
+          session=default
+        else
+          host=''${target%%.zmx.*}
+          session=''${target#*.zmx.}
+        fi
         if [[ -z $host || $host == -* ]]; then
           print -u2 "$command_name: invalid host: $host"
           return 2
@@ -76,7 +83,7 @@ lib.mkIf config.local.features.shell.enable {
       }
 
       ssh() {
-        if (( $# == 1 )) && [[ $1 == *.zmx.* ]]; then
+        if (( $# == 1 )) && [[ $1 == *.zmx || $1 == *.zmx.* ]]; then
           _zmx_connect ssh ssh "$1"
         else
           command ssh "$@"
@@ -84,7 +91,7 @@ lib.mkIf config.local.features.shell.enable {
       }
 
       ash() {
-        if (( $# == 1 )) && [[ $1 == *.zmx.* ]]; then
+        if (( $# == 1 )) && [[ $1 == *.zmx || $1 == *.zmx.* ]]; then
           _zmx_connect autossh ash "$1"
         else
           _autossh "$@"
