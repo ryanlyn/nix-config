@@ -5,6 +5,7 @@ lib.mkIf config.local.features.shell.enable {
     # powerlevel10k font
     pkgs.meslo-lgs-nf
 
+    pkgs.autossh
     pkgs.fzf-zsh
     pkgs.nix-zsh-completions
     pkgs.oh-my-zsh
@@ -30,6 +31,65 @@ lib.mkIf config.local.features.shell.enable {
       # powerlevel10k theme
       source ${pkgs.zsh-powerlevel10k}/share/zsh-powerlevel10k/powerlevel10k.zsh-theme
       [[ ! -f ${config.xdg.configHome}/p10k.zsh ]] || source ${config.xdg.configHome}/p10k.zsh
+
+      _autossh() {
+        local ssh_path
+        ssh_path=$(whence -p ssh)
+        if [[ -z $ssh_path ]]; then
+          print -u2 "autossh: ssh executable not found"
+          return 127
+        fi
+
+        AUTOSSH_PATH=$ssh_path command ${pkgs.autossh}/bin/autossh -M 0 -q "$@"
+      }
+
+      _zmx_connect() {
+        local mode=$1
+        local command_name=$2
+        local target=$3
+
+        local host=''${target%%.zmx.*}
+        local session=''${target#*.zmx.}
+        if [[ -z $host || $host == -* ]]; then
+          print -u2 "$command_name: invalid host: $host"
+          return 2
+        fi
+        if [[ $session != [A-Za-z0-9]* || $session == *[^A-Za-z0-9._-]* ]]; then
+          print -u2 "$command_name: invalid session: $session"
+          return 2
+        fi
+
+        local -a ssh_options=(
+          -o ControlMaster=auto
+          -o "ControlPath=$HOME/.ssh/cm-%r@%h:%p"
+          -o ControlPersist=10m
+          -o ServerAliveInterval=30
+          -o ServerAliveCountMax=3
+          -t
+        )
+
+        if [[ $mode == autossh ]]; then
+          _autossh "''${ssh_options[@]}" "$host" "zmx attach $session"
+        else
+          command ssh "''${ssh_options[@]}" "$host" "zmx attach $session"
+        fi
+      }
+
+      ssh() {
+        if (( $# == 1 )) && [[ $1 == *.zmx.* ]]; then
+          _zmx_connect ssh ssh "$1"
+        else
+          command ssh "$@"
+        fi
+      }
+
+      ash() {
+        if (( $# == 1 )) && [[ $1 == *.zmx.* ]]; then
+          _zmx_connect autossh ash "$1"
+        else
+          _autossh "$@"
+        fi
+      }
     '';
     envExtra = lib.concatStringsSep "\n" ([
       ''

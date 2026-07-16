@@ -47,6 +47,20 @@ home-manager switch --flake '.#personalArm64MacMini'
 home-manager switch --flake '.#personalx86Linux'
 ```
 
+## zmx SSH Sessions
+
+Home Manager installs `autossh`. Put `.zmx.` between a host and session to
+attach through zmx with SSH connection multiplexing and keepalives. Use `ash`
+for an automatically reconnecting connection:
+
+```bash
+ssh user@host.zmx.session
+ash user@host.zmx.session
+```
+
+The shorthand applies when the destination is the only argument. Other `ssh`
+invocations are passed through unchanged.
+
 ## Checks
 ```bash
 scripts/check-format.sh
