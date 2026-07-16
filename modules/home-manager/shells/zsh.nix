@@ -94,6 +94,15 @@ lib.mkIf config.local.features.shell.enable {
         unset __conda_setup
         # <<< conda initialize <<<
       ''
+
+      ''
+        # nvm
+        if [ -e $HOME/.config/nvm ]; then
+          export NVM_DIR="$HOME/.config/nvm"
+          . $NVM_DIR/nvm.sh
+          . $NVM_DIR/bash_completion
+        fi
+      ''
     ] ++ lib.optionals pkgs.stdenv.isDarwin [
       ''
         # homebrew
@@ -111,15 +120,6 @@ lib.mkIf config.local.features.shell.enable {
         fi
       ''
     ] ++ lib.optionals pkgs.stdenv.isLinux [
-      ''
-        # nvm (linux)
-        if [ -e $HOME/.config/nvm ]; then
-          export NVM_DIR="$HOME/.config/nvm"
-          . $NVM_DIR/nvm.sh
-          . $NVM_DIR/bash_completion
-        fi
-      ''
-
       ''
         # bun (linux)
         if [ -e $HOME/.bun ]; then
