@@ -9,8 +9,6 @@ lib.mkIf config.local.features.programs.enable {
     enableZshIntegration = true;
     settings = {
       theme = "Monokai Pro Octagon";
-      background-opacity = 0.85;
-      background-blur = 16;
       macos-titlebar-style = "tabs";
     };
   };
