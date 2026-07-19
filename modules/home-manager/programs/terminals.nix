@@ -8,7 +8,8 @@ lib.mkIf config.local.features.programs.enable {
     package = null; # ghostty installed via dmg/homebrew
     enableZshIntegration = true;
     settings = {
-      theme = "Monokai Pro Octagon";
+      theme = "light:Monokai Pro Light,dark:Monokai Pro Octagon";
+      window-theme = "system";
       macos-titlebar-style = "tabs";
     };
   };
