@@ -5,6 +5,26 @@
   ...
 }:
 
+let
+  nvm = pkgs.stdenvNoCC.mkDerivation {
+    pname = "nvm";
+    version = "0.40.6";
+    src = pkgs.fetchFromGitHub {
+      owner = "nvm-sh";
+      repo = "nvm";
+      rev = "v0.40.6";
+      hash = "sha256-60diMTawrIlyB29GrYcRuv5RBawGxpW82FHYWmHQgbg=";
+    };
+    dontBuild = true;
+    installPhase = ''
+      runHook preInstall
+      install -Dm644 nvm.sh "$out/share/nvm/nvm.sh"
+      install -Dm755 nvm-exec "$out/share/nvm/nvm-exec"
+      install -Dm644 bash_completion "$out/share/nvm/bash_completion"
+      runHook postInstall
+    '';
+  };
+in
 lib.mkIf config.local.features.shell.enable {
   home.packages = [
     # powerlevel10k font
@@ -102,6 +122,8 @@ lib.mkIf config.local.features.shell.enable {
           _autossh "$@"
         fi
       }
+
+      export PATH="$HOME/.nix-profile/bin:$PATH"
     '';
     envExtra = lib.concatStringsSep "\n" (
       [
@@ -168,31 +190,15 @@ lib.mkIf config.local.features.shell.enable {
           # <<< conda initialize <<<
         ''
 
-        ''
-          # nvm
-          if [ -e $HOME/.config/nvm ]; then
-            export NVM_DIR="$HOME/.config/nvm"
-            . $NVM_DIR/nvm.sh
-            . $NVM_DIR/bash_completion
-          fi
-        ''
       ]
       ++ lib.optionals pkgs.stdenv.isDarwin [
         ''
           # homebrew
-          # nix-darwin bug with apple silicon - requires homebrew to be installed and linked manually
           if [ -x /opt/homebrew/bin/brew ]; then
               eval "$(/opt/homebrew/bin/brew shellenv)"
           fi
         ''
 
-        ''
-          # nvm (homebrew)
-          if [ -e $HOME/.nvm ] && command -v brew >/dev/null 2>&1; then
-              export NVM_DIR=~/.nvm
-              source $(brew --prefix nvm)/nvm.sh
-          fi
-        ''
       ]
       ++ lib.optionals pkgs.stdenv.isLinux [
         ''
@@ -211,9 +217,20 @@ lib.mkIf config.local.features.shell.enable {
           fi
         ''
       ]
+      ++ [
+        ''
+          # nvm (Nix)
+          export NVM_DIR="$HOME/.nvm"
+          if [ -s "$NVM_DIR/nvm.sh" ]; then
+              source "$NVM_DIR/nvm.sh"
+          fi
+
+          export PATH="$HOME/.nix-profile/bin:$PATH"
+        ''
+      ]
     );
     loginExtra = ''
-      # neofetch
+      export PATH="$HOME/.nix-profile/bin:$PATH"
     '';
 
     sessionVariables = {
@@ -275,5 +292,11 @@ lib.mkIf config.local.features.shell.enable {
       extended = true;
       expireDuplicatesFirst = true;
     };
+  };
+
+  home.file = {
+    ".nvm/nvm.sh".source = "${nvm}/share/nvm/nvm.sh";
+    ".nvm/nvm-exec".source = "${nvm}/share/nvm/nvm-exec";
+    ".nvm/bash_completion".source = "${nvm}/share/nvm/bash_completion";
   };
 }

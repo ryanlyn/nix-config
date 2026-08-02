@@ -1,9 +1,13 @@
-{ config, lib, ... }:
+{
+  config,
+  lib,
+  ...
+}:
 
 lib.mkIf config.local.features.programs.enable {
   programs.mise = {
     enable = true;
-    enableZshIntegration = false;
+    enableZshIntegration = true;
     globalConfig.tools.node = "24.18.0";
   };
 }
