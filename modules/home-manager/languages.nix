@@ -18,6 +18,8 @@ lib.mkIf config.local.features.languages.enable {
       p.pylint
       p.virtualenv
     ]))
+    pkgs.ruff
+    pkgs.basedpyright
 
     # haskell
     pkgs.ghc

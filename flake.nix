@@ -43,7 +43,6 @@
 
       overlays = [ ];
 
-      # TODO: Re-evaluate whether x86_64 Linux derivations are still in active use.
       supportedSystems = [
         "aarch64-darwin"
         "x86_64-linux"
@@ -78,17 +77,6 @@
               {
                 nixpkgs.overlays = overlays;
                 system.primaryUser = username;
-                nix-homebrew = {
-                  enable = true;
-                  enableRosetta = false;
-                  mutableTaps = true;
-                  user = username;
-                  trust.formulae = [
-                    "cameroncooke/axe/axe"
-                    "openclaw/tap/crabbox"
-                    "steipete/tap/sag"
-                  ];
-                };
               }
             ];
           specialArgs = { inherit inputs lib; };

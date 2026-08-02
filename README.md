@@ -9,6 +9,8 @@ mkdir -p ~/.config/nix && echo "experimental-features = nix-command flakes" > ~/
 sudo nix run nix-darwin/master#darwin-rebuild -- switch --flake '.#personalArm64'
 ```
 
+Run the switch from a terminal with Full Disk Access so macOS permits nix-darwin to manage `/etc/pam.d/sudo_local`.
+
 Configs: `personalArm64` (MacBook Pro), `personalArm64MacMini` (Mac Mini)
 
 ## Bootstrapping Home Manager

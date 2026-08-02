@@ -5,6 +5,26 @@
   ...
 }:
 
+let
+  nvm = pkgs.stdenvNoCC.mkDerivation {
+    pname = "nvm";
+    version = "0.40.6";
+    src = pkgs.fetchFromGitHub {
+      owner = "nvm-sh";
+      repo = "nvm";
+      rev = "v0.40.6";
+      hash = "sha256-60diMTawrIlyB29GrYcRuv5RBawGxpW82FHYWmHQgbg=";
+    };
+    dontBuild = true;
+    installPhase = ''
+      runHook preInstall
+      install -Dm644 nvm.sh "$out/share/nvm/nvm.sh"
+      install -Dm755 nvm-exec "$out/share/nvm/nvm-exec"
+      install -Dm644 bash_completion "$out/share/nvm/bash_completion"
+      runHook postInstall
+    '';
+  };
+in
 lib.mkIf config.local.features.shell.enable {
   home.packages = [
     # powerlevel10k font
@@ -103,9 +123,7 @@ lib.mkIf config.local.features.shell.enable {
         fi
       }
 
-      if command -v brew >/dev/null 2>&1; then
-        export PATH="$(brew --prefix python@3.13)/libexec/bin:$PATH"
-      fi
+      export PATH="$HOME/.nix-profile/bin:$PATH"
     '';
     envExtra = lib.concatStringsSep "\n" (
       [
@@ -181,29 +199,6 @@ lib.mkIf config.local.features.shell.enable {
           fi
         ''
 
-        ''
-          # mise
-          if command -v mise >/dev/null 2>&1; then
-              eval "$(mise activate zsh)"
-          fi
-        ''
-
-        ''
-          # nvm (homebrew)
-          if command -v brew >/dev/null 2>&1; then
-              NVM_HOMEBREW_PREFIX="$(brew --prefix nvm 2>/dev/null)"
-              if [ -s "$NVM_HOMEBREW_PREFIX/nvm.sh" ]; then
-                  export NVM_DIR="$HOME/.nvm"
-                  source "$NVM_HOMEBREW_PREFIX/nvm.sh"
-              fi
-              unset NVM_HOMEBREW_PREFIX
-          fi
-
-          # Prefer the configured Python release over newer transitive Homebrew dependencies.
-          if command -v brew >/dev/null 2>&1; then
-              export PATH="$(brew --prefix python@3.13)/libexec/bin:$PATH"
-          fi
-        ''
       ]
       ++ lib.optionals pkgs.stdenv.isLinux [
         ''
@@ -222,11 +217,20 @@ lib.mkIf config.local.features.shell.enable {
           fi
         ''
       ]
+      ++ [
+        ''
+          # nvm (Nix)
+          export NVM_DIR="$HOME/.nvm"
+          if [ -s "$NVM_DIR/nvm.sh" ]; then
+              source "$NVM_DIR/nvm.sh"
+          fi
+
+          export PATH="$HOME/.nix-profile/bin:$PATH"
+        ''
+      ]
     );
     loginExtra = ''
-      if command -v brew >/dev/null 2>&1; then
-          export PATH="$(brew --prefix python@3.13)/libexec/bin:$PATH"
-      fi
+      export PATH="$HOME/.nix-profile/bin:$PATH"
     '';
 
     sessionVariables = {
@@ -288,5 +292,11 @@ lib.mkIf config.local.features.shell.enable {
       extended = true;
       expireDuplicatesFirst = true;
     };
+  };
+
+  home.file = {
+    ".nvm/nvm.sh".source = "${nvm}/share/nvm/nvm.sh";
+    ".nvm/nvm-exec".source = "${nvm}/share/nvm/nvm-exec";
+    ".nvm/bash_completion".source = "${nvm}/share/nvm/bash_completion";
   };
 }

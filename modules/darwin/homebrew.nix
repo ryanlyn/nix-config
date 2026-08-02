@@ -5,6 +5,18 @@ let
 
 in
 {
+  nix-homebrew = {
+    enable = true;
+    enableRosetta = false;
+    mutableTaps = true;
+    user = config.system.primaryUser;
+    trust.formulae = [
+      "cameroncooke/axe/axe"
+      "openclaw/tap/crabbox"
+      "steipete/tap/sag"
+    ];
+  };
+
   homebrew.enable = true;
   homebrew.onActivation = {
     autoUpdate = true;
@@ -57,6 +69,8 @@ in
   # If an app isn't available in the Mac App Store, or the version in the App Store has
   # limitiations, e.g., Transmit, install the Homebrew Cask.
   homebrew.casks = [
+    "appcleaner"
+    "amethyst"
     "gcloud-cli"
     "repobar"
   ];
@@ -69,24 +83,19 @@ in
   homebrew.brews = [
     "cairo"
     "cameroncooke/axe/axe"
-    "ddrescue"
     "ffmpeg"
     "ghostscript"
     "gogcli"
     "just"
     "lazygit"
-    "mise"
     "mosh"
     "neovim"
-    "nvm"
     "openclaw/tap/crabbox"
     "openjdk"
-    "python@3.13"
     "steipete/tap/sag"
     "tectonic"
     "testdisk"
     "vhs"
-    "wimlib"
     "xcodegen"
   ];
 }
