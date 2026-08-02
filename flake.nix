@@ -7,13 +7,14 @@
     nixpkgs-spacevim.url = "github:nixos/nixpkgs/01f116e4df6a15f4ccdffb1bcd41096869fb385c";
     nixpkgs-uv.url = "github:nixos/nixpkgs/nixos-unstable";
 
+    # TODO: Re-evaluate whether non-flake compatibility via flake-compat is still needed.
     flake-compat = {
       url = "github:edolstra/flake-compat";
       flake = false;
     };
     flake-utils.url = "github:numtide/flake-utils";
     darwin = {
-      url = "github:lnl7/nix-darwin/master";
+      url = "github:nix-darwin/nix-darwin/master";
       inputs.nixpkgs.follows = "nixpkgs";
     };
     home-manager = {
@@ -61,7 +62,6 @@
           username,
           system ? "aarch64-darwin",
           baseModules ? [
-            home-manager.darwinModules.home-manager
             baseDarwinConfig
             ./modules/darwin
           ],
@@ -134,6 +134,7 @@
             ++ [ inputs.home-manager.packages.${system}.default ];
         };
 
+        # TODO: Re-evaluate whether every profile needs a full build derivation in flake checks.
         checks = {
           format =
             pkgs.runCommand "nixfmt-check"
@@ -165,8 +166,9 @@
         personalArm64 = mkDarwinConfig {
           username = "ryan";
           system = "aarch64-darwin";
-          extraModules = [ ];
+          extraModules = [ { ids.gids.nixbld = 350; } ];
         };
+        # TODO: Re-evaluate whether the Mac Mini system and Home Manager profiles are still needed.
         personalArm64MacMini = mkDarwinConfig {
           username = "ryan";
           system = "aarch64-darwin";
