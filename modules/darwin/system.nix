@@ -37,30 +37,42 @@
       AppleShowScrollBars = "Automatic";
       AppleTemperatureUnit = "Celsius";
 
+      InitialKeyRepeat = 15;
+      KeyRepeat = 2;
+
       NSAutomaticCapitalizationEnabled = false;
       NSAutomaticDashSubstitutionEnabled = false;
+      NSAutomaticInlinePredictionEnabled = true;
       NSAutomaticPeriodSubstitutionEnabled = false;
       NSAutomaticQuoteSubstitutionEnabled = false;
       NSAutomaticSpellingCorrectionEnabled = true;
       NSNavPanelExpandedStateForSaveMode = true;
       NSNavPanelExpandedStateForSaveMode2 = true;
       _HIHideMenuBar = false;
+      "com.apple.keyboard.fnState" = true;
     };
 
     # dock
     dock = {
       autohide = false;
-      orientation = "left";
+      appswitcher-all-displays = true;
+      orientation = "bottom";
       tilesize = 128;
       expose-group-apps = false;
       mru-spaces = false; # automatically re-order spaces
+      show-recents = false;
       showhidden = true;
     };
 
     # finder
     finder = {
       AppleShowAllExtensions = true;
+      FXDefaultSearchScope = "SCcf";
       FXEnableExtensionChangeWarning = false;
+      ShowPathbar = true;
+      ShowStatusBar = true;
+      _FXShowPosixPathInTitle = true;
+      _FXSortFoldersFirst = true;
     };
 
     # login
@@ -72,6 +84,15 @@
     # spaces
     spaces = {
       spans-displays = false;
+    };
+
+    WindowManager = {
+      EnableStandardClickToShowDesktop = false;
+    };
+
+    screensaver = {
+      askForPassword = true;
+      askForPasswordDelay = 0;
     };
 
     trackpad = {
