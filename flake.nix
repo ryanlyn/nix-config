@@ -17,6 +17,7 @@
       url = "github:nix-darwin/nix-darwin/master";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    nix-homebrew.url = "github:zhaofengli/nix-homebrew";
     home-manager = {
       url = "github:nix-community/home-manager/master";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -49,19 +50,18 @@
       isDarwin = system: (builtins.elem system lib.platforms.darwin);
       homePrefix = system: if isDarwin system then "/Users" else "/home";
 
-      baseDarwinConfig =
-        { pkgs, ... }:
-        {
-          environment.darwinConfig = "./modules/darwin";
-          nix.package = pkgs.nixVersions.stable;
-          nix.extraOptions = "\n          experimental-features = nix-command flakes\n        ";
-        };
+      baseDarwinConfig = { pkgs, ... }: {
+        environment.darwinConfig = "./modules/darwin";
+        nix.package = pkgs.nixVersions.stable;
+        nix.extraOptions = "\n          experimental-features = nix-command flakes\n        ";
+      };
 
       mkDarwinConfig =
         {
           username,
           system ? "aarch64-darwin",
           baseModules ? [
+            inputs.nix-homebrew.darwinModules.nix-homebrew
             baseDarwinConfig
             ./modules/darwin
           ],
