@@ -34,7 +34,6 @@ lib.mkIf cfg.packageManagers.enable {
   };
 
   home.sessionVariables = lib.mkIf cfg.releaseAge.enable {
-    NPM_CONFIG_IGNORE_SCRIPTS = "true";
     PIP_UPLOADED_PRIOR_TO = "P${toString releaseAgeDays}D";
   };
 
