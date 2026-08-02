@@ -11,7 +11,6 @@ lib.mkIf config.local.features.shell.enable {
     pkgs.meslo-lgs-nf
 
     pkgs.autossh
-    pkgs.fzf-zsh
     pkgs.nix-zsh-completions
     pkgs.oh-my-zsh
     # pkgs.pure-prompt
@@ -24,6 +23,7 @@ lib.mkIf config.local.features.shell.enable {
 
   programs.zsh = {
     enable = true;
+    dotDir = config.home.homeDirectory;
     syntaxHighlighting.enable = true;
     enableCompletion = true;
     autosuggestion.enable = true;
