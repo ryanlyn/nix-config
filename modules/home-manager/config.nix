@@ -7,7 +7,9 @@
     configHome = "${config.home.homeDirectory}/.config";
 
     configFile = {
-      "p10k.zsh" = { source = ../../config/powerlevel10k/p10k.zsh; };
+      "p10k.zsh" = {
+        source = ../../config/powerlevel10k/p10k.zsh;
+      };
       # "nvim" = {
       #  source = ../../config/nvim;
       #  recursive = true;

@@ -1,7 +1,9 @@
 { lib, ... }:
 
-let inherit (lib) mkEnableOption mkOption types;
-in {
+let
+  inherit (lib) mkEnableOption mkOption types;
+in
+{
   options.local.features = {
     packageManagers.enable = mkEnableOption "package-manager tooling" // {
       default = true;
@@ -14,8 +16,7 @@ in {
     releaseAge.days = mkOption {
       type = types.ints.positive;
       default = 7;
-      description =
-        "Minimum release age in days for supported package managers.";
+      description = "Minimum release age in days for supported package managers.";
     };
 
     languages.enable = mkEnableOption "language toolchains" // {

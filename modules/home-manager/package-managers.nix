@@ -1,4 +1,10 @@
-{ config, inputs, lib, pkgs, ... }:
+{
+  config,
+  inputs,
+  lib,
+  pkgs,
+  ...
+}:
 
 let
   cfg = config.local.features;
@@ -6,8 +12,14 @@ let
   releaseAgeDays = cfg.releaseAge.days;
   releaseAgeMinutes = releaseAgeDays * 24 * 60;
   releaseAgeSeconds = releaseAgeDays * 24 * 60 * 60;
-in lib.mkIf cfg.packageManagers.enable {
-  home.packages = [ uv pkgs.pnpm pkgs.deno pkgs.bun ];
+in
+lib.mkIf cfg.packageManagers.enable {
+  home.packages = [
+    uv
+    pkgs.pnpm
+    pkgs.deno
+    pkgs.bun
+  ];
 
   xdg.configFile."uv/uv.toml" = lib.mkIf cfg.releaseAge.enable {
     text = ''

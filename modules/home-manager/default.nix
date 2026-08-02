@@ -1,4 +1,9 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 {
   imports = [
@@ -31,7 +36,9 @@
   # the Home Manager release notes for a list of state version
   # changes in each release.
   home.stateVersion = "21.11";
-  home.sessionVariables = { EDITOR = "nvim"; };
+  home.sessionVariables = {
+    EDITOR = "nvim";
+  };
 
   # Let Home Manager install and manage itself.
   programs.home-manager.enable = true;

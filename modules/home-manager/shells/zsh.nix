@@ -1,4 +1,9 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 lib.mkIf config.local.features.shell.enable {
   home.packages = [
@@ -98,111 +103,115 @@ lib.mkIf config.local.features.shell.enable {
         fi
       }
     '';
-    envExtra = lib.concatStringsSep "\n" ([
-      ''
-        # secrets
-        # Import simple KEY=VALUE pairs without executing arbitrary shell code.
-        if [ -r "$HOME/.secrets" ]; then
-          while IFS= read -r line || [ -n "$line" ]; do
-            case "$line" in
-              ""|\#*)
-                continue
-                ;;
-              export\ *)
-                line=''${line#export }
-                ;;
-            esac
-            case "$line" in
-              [A-Za-z_][A-Za-z0-9_]*=*)
-                export "$line"
-                ;;
-            esac
-          done < "$HOME/.secrets"
-        fi
-      ''
+    envExtra = lib.concatStringsSep "\n" (
+      [
+        ''
+          # secrets
+          # Import simple KEY=VALUE pairs without executing arbitrary shell code.
+          if [ -r "$HOME/.secrets" ]; then
+            while IFS= read -r line || [ -n "$line" ]; do
+              case "$line" in
+                ""|\#*)
+                  continue
+                  ;;
+                export\ *)
+                  line=''${line#export }
+                  ;;
+              esac
+              case "$line" in
+                [A-Za-z_][A-Za-z0-9_]*=*)
+                  export "$line"
+                  ;;
+              esac
+            done < "$HOME/.secrets"
+          fi
+        ''
 
-      ''
-        # nix
-        if [ -e $HOME/.nix-profile/etc/profile.d/nix.sh ]; then . $HOME/.nix-profile/etc/profile.d/nix.sh; fi
-      ''
+        ''
+          # nix
+          if [ -e $HOME/.nix-profile/etc/profile.d/nix.sh ]; then . $HOME/.nix-profile/etc/profile.d/nix.sh; fi
+        ''
 
-      ''
-        # home-manager
-        if [ -e $HOME/.nix-profile/etc/profile.d/hm-session-vars.sh ]; then . $HOME/.nix-profile/etc/profile.d/hm-session-vars.sh; fi
-      ''
+        ''
+          # home-manager
+          if [ -e $HOME/.nix-profile/etc/profile.d/hm-session-vars.sh ]; then . $HOME/.nix-profile/etc/profile.d/hm-session-vars.sh; fi
+        ''
 
-      ''
-        # direnv
-        eval "$(${pkgs.direnv}/bin/direnv hook zsh)"
-      ''
+        ''
+          # direnv
+          eval "$(${pkgs.direnv}/bin/direnv hook zsh)"
+        ''
 
-      ''
-        # local bin
-        export PATH="$HOME/.local/bin:$PATH"
-      ''
+        ''
+          # local bin
+          export PATH="$HOME/.local/bin:$PATH"
+        ''
 
-      ''
-        # google-cloud-sdk
-        export PATH="$HOME/google-cloud-sdk/bin:$PATH"
-      ''
+        ''
+          # google-cloud-sdk
+          export PATH="$HOME/google-cloud-sdk/bin:$PATH"
+        ''
 
-      ''
-        # >>> conda initialize >>>
-        __conda_setup="$("$HOME/miniconda3/bin/conda" 'shell.bash' 'hook' 2> /dev/null)"
-        if [ $? -eq 0 ]; then
-            eval "$__conda_setup"
-        else
-            if [ -f "$HOME/miniconda3/etc/profile.d/conda.sh" ]; then
-                . "$HOME/miniconda3/etc/profile.d/conda.sh"
-            else
-                export PATH="$HOME/miniconda3/bin:$PATH"
-            fi
-        fi
-        unset __conda_setup
-        # <<< conda initialize <<<
-      ''
+        ''
+          # >>> conda initialize >>>
+          __conda_setup="$("$HOME/miniconda3/bin/conda" 'shell.bash' 'hook' 2> /dev/null)"
+          if [ $? -eq 0 ]; then
+              eval "$__conda_setup"
+          else
+              if [ -f "$HOME/miniconda3/etc/profile.d/conda.sh" ]; then
+                  . "$HOME/miniconda3/etc/profile.d/conda.sh"
+              else
+                  export PATH="$HOME/miniconda3/bin:$PATH"
+              fi
+          fi
+          unset __conda_setup
+          # <<< conda initialize <<<
+        ''
 
-      ''
-        # nvm
-        if [ -e $HOME/.config/nvm ]; then
-          export NVM_DIR="$HOME/.config/nvm"
-          . $NVM_DIR/nvm.sh
-          . $NVM_DIR/bash_completion
-        fi
-      ''
-    ] ++ lib.optionals pkgs.stdenv.isDarwin [
-      ''
-        # homebrew
-        # nix-darwin bug with apple silicon - requires homebrew to be installed and linked manually
-        if [ -x /opt/homebrew/bin/brew ]; then
-            eval "$(/opt/homebrew/bin/brew shellenv)"
-        fi
-      ''
+        ''
+          # nvm
+          if [ -e $HOME/.config/nvm ]; then
+            export NVM_DIR="$HOME/.config/nvm"
+            . $NVM_DIR/nvm.sh
+            . $NVM_DIR/bash_completion
+          fi
+        ''
+      ]
+      ++ lib.optionals pkgs.stdenv.isDarwin [
+        ''
+          # homebrew
+          # nix-darwin bug with apple silicon - requires homebrew to be installed and linked manually
+          if [ -x /opt/homebrew/bin/brew ]; then
+              eval "$(/opt/homebrew/bin/brew shellenv)"
+          fi
+        ''
 
-      ''
-        # nvm (homebrew)
-        if [ -e $HOME/.nvm ] && command -v brew >/dev/null 2>&1; then
-            export NVM_DIR=~/.nvm
-            source $(brew --prefix nvm)/nvm.sh
-        fi
-      ''
-    ] ++ lib.optionals pkgs.stdenv.isLinux [
-      ''
-        # bun (linux)
-        if [ -e $HOME/.bun ]; then
-          export BUN_INSTALL="$HOME/.bun"
-          export PATH=$BUN_INSTALL/bin:$PATH
-        fi
-      ''
+        ''
+          # nvm (homebrew)
+          if [ -e $HOME/.nvm ] && command -v brew >/dev/null 2>&1; then
+              export NVM_DIR=~/.nvm
+              source $(brew --prefix nvm)/nvm.sh
+          fi
+        ''
+      ]
+      ++ lib.optionals pkgs.stdenv.isLinux [
+        ''
+          # bun (linux)
+          if [ -e $HOME/.bun ]; then
+            export BUN_INSTALL="$HOME/.bun"
+            export PATH=$BUN_INSTALL/bin:$PATH
+          fi
+        ''
 
-      ''
-        # cuda
-        # /usr/local/cuda is a symlink to /usr/local/cuda-X.X
-        if [ -e /usr/local/cuda ]; then
-            export PATH=/usr/local/cuda/bin:$PATH
-        fi
-      ''
-    ]);
+        ''
+          # cuda
+          # /usr/local/cuda is a symlink to /usr/local/cuda-X.X
+          if [ -e /usr/local/cuda ]; then
+              export PATH=/usr/local/cuda/bin:$PATH
+          fi
+        ''
+      ]
+    );
     loginExtra = ''
       # neofetch
     '';
@@ -211,7 +220,8 @@ lib.mkIf config.local.features.shell.enable {
       EDITOR = "nvim";
       LC_CTYPE = "en_AU.UTF-8";
       LESSCHARSET = "utf-8";
-    } // lib.optionalAttrs pkgs.stdenv.isLinux {
+    }
+    // lib.optionalAttrs pkgs.stdenv.isLinux {
       LD_LIBRARY_PATH = "/usr/local/cuda/lib64";
       # If you need to add Nix packages to LD_LIBRARY_PATH in the future, use:
       # LD_LIBRARY_PATH = "/usr/local/cuda/lib64:${lib.makeLibraryPath [ pkgs.gcc-unwrapped ]}";
@@ -225,26 +235,24 @@ lib.mkIf config.local.features.shell.enable {
       ls = "eza";
       # Keep host identifiers in sync with flake.nix and README.md.
       nix-ds = "darwin-rebuild switch --flake $HOME/nix-config#personalArm64";
-      nix-ds-mini =
-        "darwin-rebuild switch --flake $HOME/nix-config#personalArm64MacMini";
-      nix-hm-darwin =
-        "home-manager switch --flake $HOME/nix-config#personalArm64";
-      nix-hm-darwin-mini =
-        "home-manager switch --flake $HOME/nix-config#personalArm64MacMini";
-      nix-hm-linux =
-        "home-manager switch --flake $HOME/nix-config#personalx86Linux";
+      nix-ds-mini = "darwin-rebuild switch --flake $HOME/nix-config#personalArm64MacMini";
+      nix-hm-darwin = "home-manager switch --flake $HOME/nix-config#personalArm64";
+      nix-hm-darwin-mini = "home-manager switch --flake $HOME/nix-config#personalArm64MacMini";
+      nix-hm-linux = "home-manager switch --flake $HOME/nix-config#personalx86Linux";
       spacevim = "spacenvim";
     };
 
-    plugins = [{
-      name = "fzf-tab";
-      src = pkgs.fetchFromGitHub {
-        owner = "Aloxaf";
-        repo = "fzf-tab";
-        rev = "0c36bdcf6a80ec009280897f07f56969f94d377e";
-        sha256 = "0ymp9ky0jlkx9b63jajvpac5g3ll8snkf8q081g0yw42b9hwpiid";
-      };
-    }];
+    plugins = [
+      {
+        name = "fzf-tab";
+        src = pkgs.fetchFromGitHub {
+          owner = "Aloxaf";
+          repo = "fzf-tab";
+          rev = "0c36bdcf6a80ec009280897f07f56969f94d377e";
+          sha256 = "0ymp9ky0jlkx9b63jajvpac5g3ll8snkf8q081g0yw42b9hwpiid";
+        };
+      }
+    ];
 
     oh-my-zsh = {
       enable = true;

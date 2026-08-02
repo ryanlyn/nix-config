@@ -13,7 +13,7 @@
   };
 
   system.defaults = {
-    # general system settings  
+    # general system settings
     NSGlobalDomain = {
       # units
       AppleMeasurementUnits = "Centimeters";
@@ -54,7 +54,9 @@
     };
 
     # spaces
-    spaces = { spans-displays = false; };
+    spaces = {
+      spans-displays = false;
+    };
 
     trackpad = {
       Clicking = true;
