@@ -3,6 +3,9 @@
 
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
+    # TODO: Re-evaluate whether the legacy SpaceVim compatibility pin is still needed.
+    nixpkgs-spacevim.url =
+      "github:nixos/nixpkgs/01f116e4df6a15f4ccdffb1bcd41096869fb385c";
     nixpkgs-uv.url = "github:nixos/nixpkgs/nixos-unstable";
 
     flake-compat = {

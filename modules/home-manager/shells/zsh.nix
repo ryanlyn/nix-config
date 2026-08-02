@@ -211,7 +211,6 @@ lib.mkIf config.local.features.shell.enable {
       EDITOR = "nvim";
       LC_CTYPE = "en_AU.UTF-8";
       LESSCHARSET = "utf-8";
-      TERM = "xterm-256color";
     } // lib.optionalAttrs pkgs.stdenv.isLinux {
       LD_LIBRARY_PATH = "/usr/local/cuda/lib64";
       # If you need to add Nix packages to LD_LIBRARY_PATH in the future, use:
@@ -234,6 +233,7 @@ lib.mkIf config.local.features.shell.enable {
         "home-manager switch --flake $HOME/nix-config#personalArm64MacMini";
       nix-hm-linux =
         "home-manager switch --flake $HOME/nix-config#personalx86Linux";
+      spacevim = "spacenvim";
     };
 
     plugins = [{

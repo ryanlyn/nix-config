@@ -27,7 +27,6 @@ in lib.mkIf config.local.features.programs.enable {
     # pkgs.neofetch
     pkgs.procs
     pkgs.ripgrep
-    pkgs.spacevim
     pkgs.tealdeer
     pkgs.vim
     pkgs.unzip
