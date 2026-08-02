@@ -3,7 +3,7 @@
 {
   imports = [
     ./system.nix
-    # ./homebrew.nix
+    ./homebrew.nix
   ];
   # These are defined in flake.nix:
   # environment.darwinConfig = "$HOME/nix-config/modules/darwin";

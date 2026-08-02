@@ -5,19 +5,30 @@ let
 
 in
 {
+  nix-homebrew = {
+    enable = true;
+    enableRosetta = false;
+    mutableTaps = true;
+    user = config.system.primaryUser;
+    trust.formulae = [
+      "cameroncooke/axe/axe"
+      "openclaw/tap/crabbox"
+      "steipete/tap/sag"
+    ];
+  };
+
   homebrew.enable = true;
-  homebrew.autoUpdate = true;
-  homebrew.cleanup = "zap";
+  homebrew.onActivation = {
+    autoUpdate = true;
+    cleanup = "none";
+    upgrade = true;
+  };
   homebrew.global.brewfile = true;
-  homebrew.global.noLock = true;
 
   homebrew.taps = [
-    "homebrew/cask"
-    "homebrew/cask-drivers"
-    "homebrew/cask-fonts"
-    "homebrew/cask-versions"
-    "homebrew/core"
-    "homebrew/services"
+    "cameroncooke/axe"
+    "openclaw/tap"
+    "steipete/tap"
   ];
 
   # Prefer installing application from the Mac App Store
@@ -60,14 +71,8 @@ in
   homebrew.casks = [
     "appcleaner"
     "amethyst"
-    # "firefox"
-    # "google-chrome"
-    # "google-drive"
-    # "signal"  # prefer official source
-    # "transmission"  # prefer official source
-    # "visual-studio-code"
-    # "yubico-yubikey-manager"  # prefer official source
-    # "zoom"
+    "gcloud-cli"
+    "repobar"
   ];
 
   # Configuration related to casks
@@ -76,6 +81,21 @@ in
   # For cli packages that aren't currently available for macOS in `nixpkgs`.Packages should be
   # installed in `../home/default.nix` whenever possible.
   homebrew.brews = [
-    "libomp" # needed for xgboost
+    "cairo"
+    "cameroncooke/axe/axe"
+    "ffmpeg"
+    "ghostscript"
+    "gogcli"
+    "just"
+    "lazygit"
+    "mosh"
+    "neovim"
+    "openclaw/tap/crabbox"
+    "openjdk"
+    "steipete/tap/sag"
+    "tectonic"
+    "testdisk"
+    "vhs"
+    "xcodegen"
   ];
 }
