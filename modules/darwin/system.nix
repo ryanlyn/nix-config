@@ -1,9 +1,11 @@
 { ... }:
 
 {
-  # Add ability to used TouchID for sudo authentication
-  # Pending: https://github.com/LnL7/nix-darwin/pull/228
-  # security.pam.enableSudoTouchIdAuth = true;
+  security.pam.services.sudo_local = {
+    enable = true;
+    touchIdAuth = true;
+    reattach = true;
+  };
 
   # keyboard
   system.keyboard = {
