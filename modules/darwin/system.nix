@@ -7,6 +7,20 @@
     reattach = true;
   };
 
+  nix.gc = {
+    automatic = true;
+    interval = {
+      Weekday = 7;
+      Hour = 3;
+      Minute = 15;
+    };
+    options = "--delete-older-than 30d";
+  };
+
+  nix.optimise.automatic = true;
+
+  programs.nix-index.enable = true;
+
   # keyboard
   system.keyboard = {
     enableKeyMapping = true;
