@@ -42,7 +42,7 @@
 
       NSAutomaticCapitalizationEnabled = false;
       NSAutomaticDashSubstitutionEnabled = false;
-      NSAutomaticInlinePredictionEnabled = false;
+      NSAutomaticInlinePredictionEnabled = true;
       NSAutomaticPeriodSubstitutionEnabled = false;
       NSAutomaticQuoteSubstitutionEnabled = false;
       NSAutomaticSpellingCorrectionEnabled = true;
