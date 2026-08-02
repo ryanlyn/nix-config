@@ -1,7 +1,14 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
-let isX86Linux = pkgs.stdenv.hostPlatform.system == "x86_64-linux";
-in lib.mkIf config.local.features.programs.enable {
+let
+  isX86Linux = pkgs.stdenv.hostPlatform.system == "x86_64-linux";
+in
+lib.mkIf config.local.features.programs.enable {
   home.packages = [
     pkgs.awscli2
     pkgs.bandwhich
@@ -31,5 +38,6 @@ in lib.mkIf config.local.features.programs.enable {
     pkgs.vim
     pkgs.unzip
     pkgs.wget
-  ] ++ lib.optionals isX86Linux [ pkgs.dust ];
+  ]
+  ++ lib.optionals isX86Linux [ pkgs.dust ];
 }

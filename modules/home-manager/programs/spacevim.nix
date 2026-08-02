@@ -1,13 +1,20 @@
-{ config, inputs, lib, pkgs, ... }:
+{
+  config,
+  inputs,
+  lib,
+  pkgs,
+  ...
+}:
 
 let
-  legacyPkgs =
-    inputs.nixpkgs-spacevim.legacyPackages.${pkgs.stdenv.hostPlatform.system};
+  legacyPkgs = inputs.nixpkgs-spacevim.legacyPackages.${pkgs.stdenv.hostPlatform.system};
   spacevimConfig = {
-    custom_plugins = [{
-      merged = false;
-      name = "lilydjwg/colorizer";
-    }];
+    custom_plugins = [
+      {
+        merged = false;
+        name = "lilydjwg/colorizer";
+      }
+    ];
 
     layers = [
       { name = "default"; }
@@ -86,17 +93,18 @@ let
 
     return M
   '';
-  spacevim = (legacyPkgs.spacevim.override {
-    spacevim_config = spacevimConfig;
-  }).overrideAttrs (old: {
-    postPatch = (old.postPatch or "") + ''
-      cp ${spacevimTreesitterConfig} lua/spacevim/treesitter.lua
-      substituteInPlace autoload/SpaceVim/custom.vim \
-        --replace-fail \
-          'if getftime(resolve(global_config)) < getftime(resolve(global_config_cache))' \
-          'if 0'
-    '';
-  });
-in lib.mkIf config.local.features.programs.enable {
+  spacevim =
+    (legacyPkgs.spacevim.override { spacevim_config = spacevimConfig; }).overrideAttrs
+      (old: {
+        postPatch = (old.postPatch or "") + ''
+          cp ${spacevimTreesitterConfig} lua/spacevim/treesitter.lua
+          substituteInPlace autoload/SpaceVim/custom.vim \
+            --replace-fail \
+              'if getftime(resolve(global_config)) < getftime(resolve(global_config_cache))' \
+              'if 0'
+        '';
+      });
+in
+lib.mkIf config.local.features.programs.enable {
   home.packages = [ spacevim ];
 }

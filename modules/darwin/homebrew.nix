@@ -1,10 +1,10 @@
 { config, lib, ... }:
 
 let
-  mkIfCaskPresent = cask:
-    lib.mkIf (lib.any (x: x == cask) config.homebrew.casks);
+  mkIfCaskPresent = cask: lib.mkIf (lib.any (x: x == cask) config.homebrew.casks);
 
-in {
+in
+{
   homebrew.enable = true;
   homebrew.autoUpdate = true;
   homebrew.cleanup = "zap";
@@ -71,8 +71,7 @@ in {
   ];
 
   # Configuration related to casks
-  environment.variables.SSH_AUTH_SOCK = mkIfCaskPresent "secretive"
-    "${config.system.primaryUserHome}/Library/Containers/com.maxgoedjen.Secretive.SecretAgent/Data/socket.ssh";
+  environment.variables.SSH_AUTH_SOCK = mkIfCaskPresent "secretive" "${config.system.primaryUserHome}/Library/Containers/com.maxgoedjen.Secretive.SecretAgent/Data/socket.ssh";
 
   # For cli packages that aren't currently available for macOS in `nixpkgs`.Packages should be
   # installed in `../home/default.nix` whenever possible.

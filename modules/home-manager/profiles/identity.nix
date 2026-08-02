@@ -1,7 +1,9 @@
 { lib, ... }:
 
-let inherit (lib) mkOption types;
-in {
+let
+  inherit (lib) mkOption types;
+in
+{
   options.local.identity = {
     gitUserName = mkOption {
       type = types.str;
