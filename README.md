@@ -6,13 +6,7 @@ mkdir -p ~/.config/nix && echo "experimental-features = nix-command flakes" > ~/
 
 ## Bootstrapping Darwin
 ```bash
-nix build '.#darwinConfigurations.personalArm64.config.system.build.toplevel' -v
-
-# rename if first install
-sudo mv /etc/bashrc /etc/bashrc.before-nix-darwin
-sudo mv /etc/zshrc /etc/zshrc.before-nix-darwin
-
-sudo ./result/sw/bin/darwin-rebuild switch --flake '.#personalArm64'
+sudo nix run nix-darwin/master#darwin-rebuild -- switch --flake '.#personalArm64'
 ```
 
 Configs: `personalArm64` (MacBook Pro), `personalArm64MacMini` (Mac Mini)
