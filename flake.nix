@@ -3,24 +3,36 @@
 
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
+    # TODO: Re-evaluate whether the legacy SpaceVim compatibility pin is still needed.
+    nixpkgs-spacevim.url = "github:nixos/nixpkgs/01f116e4df6a15f4ccdffb1bcd41096869fb385c";
     nixpkgs-uv.url = "github:nixos/nixpkgs/nixos-unstable";
 
+    # TODO: Re-evaluate whether non-flake compatibility via flake-compat is still needed.
     flake-compat = {
       url = "github:edolstra/flake-compat";
       flake = false;
     };
     flake-utils.url = "github:numtide/flake-utils";
     darwin = {
-      url = "github:lnl7/nix-darwin/master";
+      url = "github:nix-darwin/nix-darwin/master";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    nix-homebrew.url = "github:zhaofengli/nix-homebrew";
     home-manager = {
       url = "github:nix-community/home-manager/master";
       inputs.nixpkgs.follows = "nixpkgs";
     };
   };
 
-  outputs = inputs@{ self, nixpkgs, darwin, home-manager, flake-utils, ... }:
+  outputs =
+    inputs@{
+      self,
+      nixpkgs,
+      darwin,
+      home-manager,
+      flake-utils,
+      ...
+    }:
 
     let
       inherit (darwin.lib) darwinSystem;
@@ -31,125 +43,173 @@
 
       overlays = [ ];
 
-      supportedSystems = [ "aarch64-darwin" "x86_64-linux" ];
+      # TODO: Re-evaluate whether x86_64 Linux derivations are still in active use.
+      supportedSystems = [
+        "aarch64-darwin"
+        "x86_64-linux"
+      ];
       isDarwin = system: (builtins.elem system lib.platforms.darwin);
       homePrefix = system: if isDarwin system then "/Users" else "/home";
 
       baseDarwinConfig = { pkgs, ... }: {
         environment.darwinConfig = "./modules/darwin";
         nix.package = pkgs.nixVersions.stable;
-        nix.extraOptions =
-          "\n          experimental-features = nix-command flakes\n        ";
+        nix.extraOptions = "\n          experimental-features = nix-command flakes\n        ";
       };
 
-      mkDarwinConfig = { username, system ? "aarch64-darwin", baseModules ? [
-        home-manager.darwinModules.home-manager
-        baseDarwinConfig
-        ./modules/darwin
-      ], extraModules ? [ ] }:
+      mkDarwinConfig =
+        {
+          username,
+          system ? "aarch64-darwin",
+          baseModules ? [
+            inputs.nix-homebrew.darwinModules.nix-homebrew
+            baseDarwinConfig
+            ./modules/darwin
+          ],
+          extraModules ? [ ],
+        }:
 
         darwinSystem {
           system = system;
-          modules = baseModules ++ extraModules ++ [{
-            nixpkgs.overlays = overlays;
-            system.primaryUser = username;
-          }];
+          modules =
+            baseModules
+            ++ extraModules
+            ++ [
+              {
+                nixpkgs.overlays = overlays;
+                system.primaryUser = username;
+                nix-homebrew = {
+                  enable = true;
+                  enableRosetta = false;
+                  mutableTaps = true;
+                  user = username;
+                  trust.formulae = [
+                    "cameroncooke/axe/axe"
+                    "openclaw/tap/crabbox"
+                    "steipete/tap/sag"
+                  ];
+                };
+              }
+            ];
           specialArgs = { inherit inputs lib; };
         };
 
-      mkHomeConfig = { username, system ? "aarch64-darwin"
-        , baseModules ? [ ./modules/home-manager ], extraModules ? [ ] }:
+      mkHomeConfig =
+        {
+          username,
+          system ? "aarch64-darwin",
+          baseModules ? [ ./modules/home-manager ],
+          extraModules ? [ ],
+        }:
         let
           pkgs = import inputs.nixpkgs {
             inherit system;
             overlays = overlays;
           };
-        in homeManagerConfiguration rec {
+        in
+        homeManagerConfiguration rec {
           inherit pkgs;
           extraSpecialArgs = { inherit inputs; };
-          modules = baseModules ++ extraModules
-            ++ [{ nixpkgs.overlays = overlays; }] ++ [{
-              home = {
-                username = username;
-                homeDirectory = "${homePrefix system}/${username}";
-                stateVersion = "21.11";
-              };
-              targets.genericLinux.enable = !isDarwin system;
-            }];
+          modules =
+            baseModules
+            ++ extraModules
+            ++ [ { nixpkgs.overlays = overlays; } ]
+            ++ [
+              {
+                home = {
+                  username = username;
+                  homeDirectory = "${homePrefix system}/${username}";
+                  stateVersion = "21.11";
+                };
+                targets.genericLinux.enable = !isDarwin system;
+              }
+            ];
         };
-    in eachSystem supportedSystems (system:
+    in
+    eachSystem supportedSystems (
+      system:
       let
         pkgs = import nixpkgs {
           inherit system;
           overlays = overlays;
         };
-      in {
+      in
+      {
         devShells.default = pkgs.mkShell {
           name = "nix-config";
-          packages = with pkgs;
-            [ git nixfmt-classic ]
+          packages =
+            with pkgs;
+            [
+              git
+              nixfmt
+            ]
             ++ [ inputs.home-manager.packages.${system}.default ];
         };
 
+        # TODO: Re-evaluate whether every profile needs a full build derivation in flake checks.
         checks = {
-          format = pkgs.runCommand "nixfmt-check" {
-            nativeBuildInputs = [ pkgs.nixfmt-classic ];
-            src = self;
-          } ''
-            cd "$src"
-            nixfmt --check $(find . -name '*.nix' -not -path './.git/*')
-            touch "$out"
-          '';
-        } // lib.optionalAttrs (system == "aarch64-darwin") {
-          darwin-personalArm64 =
-            self.darwinConfigurations.personalArm64.config.system.build.toplevel;
+          format =
+            pkgs.runCommand "nixfmt-check"
+              {
+                nativeBuildInputs = [ pkgs.nixfmt ];
+                src = self;
+              }
+              ''
+                cd "$src"
+                nixfmt --check $(find . -name '*.nix' -not -path './.git/*')
+                touch "$out"
+              '';
+        }
+        // lib.optionalAttrs (system == "aarch64-darwin") {
+          darwin-personalArm64 = self.darwinConfigurations.personalArm64.config.system.build.toplevel;
           darwin-personalArm64MacMini =
             self.darwinConfigurations.personalArm64MacMini.config.system.build.toplevel;
-          home-personalArm64 =
-            self.homeConfigurations.personalArm64.activationPackage;
-          home-personalArm64MacMini =
-            self.homeConfigurations.personalArm64MacMini.activationPackage;
-        } // lib.optionalAttrs (system == "x86_64-linux") {
-          home-personalx86Linux =
-            self.homeConfigurations.personalx86Linux.activationPackage;
+          home-personalArm64 = self.homeConfigurations.personalArm64.activationPackage;
+          home-personalArm64MacMini = self.homeConfigurations.personalArm64MacMini.activationPackage;
+        }
+        // lib.optionalAttrs (system == "x86_64-linux") {
+          home-personalx86Linux = self.homeConfigurations.personalx86Linux.activationPackage;
         };
-      }) // {
+      }
+    )
+    // {
 
-        darwinConfigurations = {
-          personalArm64 = mkDarwinConfig {
-            username = "ryan";
-            system = "aarch64-darwin";
-            extraModules = [ ];
-          };
-          personalArm64MacMini = mkDarwinConfig {
-            username = "ryan";
-            system = "aarch64-darwin";
-            extraModules = [
-              { ids.gids.nixbld = 350; }
-              {
-                system.defaults.dock.orientation = nixpkgs.lib.mkForce "bottom";
-                system.defaults.dock.tilesize = nixpkgs.lib.mkForce 42;
-              }
-            ];
-          };
+      darwinConfigurations = {
+        personalArm64 = mkDarwinConfig {
+          username = "ryan";
+          system = "aarch64-darwin";
+          extraModules = [ { ids.gids.nixbld = 350; } ];
         };
-
-        homeConfigurations = {
-          personalx86Linux = mkHomeConfig {
-            system = "x86_64-linux";
-            username = "ryan";
-            extraModules = [ ];
-          };
-          personalArm64 = mkHomeConfig {
-            system = "aarch64-darwin";
-            username = "ryan";
-            extraModules = [ ];
-          };
-          personalArm64MacMini = mkHomeConfig {
-            system = "aarch64-darwin";
-            username = "ryan";
-            extraModules = [ ];
-          };
+        # TODO: Re-evaluate whether the Mac Mini system and Home Manager profiles are still needed.
+        personalArm64MacMini = mkDarwinConfig {
+          username = "ryan";
+          system = "aarch64-darwin";
+          extraModules = [
+            { ids.gids.nixbld = 350; }
+            {
+              system.defaults.dock.orientation = nixpkgs.lib.mkForce "bottom";
+              system.defaults.dock.tilesize = nixpkgs.lib.mkForce 42;
+            }
+          ];
         };
       };
+
+      homeConfigurations = {
+        personalx86Linux = mkHomeConfig {
+          system = "x86_64-linux";
+          username = "ryan";
+          extraModules = [ ];
+        };
+        personalArm64 = mkHomeConfig {
+          system = "aarch64-darwin";
+          username = "ryan";
+          extraModules = [ ];
+        };
+        personalArm64MacMini = mkHomeConfig {
+          system = "aarch64-darwin";
+          username = "ryan";
+          extraModules = [ ];
+        };
+      };
+    };
 }

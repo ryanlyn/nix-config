@@ -1,6 +1,8 @@
 { ... }:
 
 {
+  security.pam.services.sudo_local.enable = false;
+
   # Add ability to used TouchID for sudo authentication
   # Pending: https://github.com/LnL7/nix-darwin/pull/228
   # security.pam.enableSudoTouchIdAuth = true;
@@ -13,7 +15,7 @@
   };
 
   system.defaults = {
-    # general system settings  
+    # general system settings
     NSGlobalDomain = {
       # units
       AppleMeasurementUnits = "Centimeters";
@@ -34,7 +36,7 @@
     # dock
     dock = {
       autohide = false;
-      orientation = "left";
+      orientation = "bottom";
       tilesize = 128;
       expose-group-apps = false;
       mru-spaces = false; # automatically re-order spaces
@@ -54,7 +56,9 @@
     };
 
     # spaces
-    spaces = { spans-displays = false; };
+    spaces = {
+      spans-displays = false;
+    };
 
     trackpad = {
       Clicking = true;

@@ -1,11 +1,16 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 lib.mkIf config.local.features.languages.enable {
   home.packages = [
     # python
     pkgs.pipenv
-    (pkgs.python311.withPackages (p: [
-      # p.black # disable: broken python3.10-uvloop-0.16.0.drv dependency
+    (pkgs.python313.withPackages (p: [
+      # p.black # disable: broken uvloop dependency
       p.flake8
       p.mypy
       p.pip

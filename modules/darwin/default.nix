@@ -3,7 +3,7 @@
 {
   imports = [
     ./system.nix
-    # ./homebrew.nix
+    ./homebrew.nix
   ];
   # These are defined in flake.nix:
   # environment.darwinConfig = "$HOME/nix-config/modules/darwin";
@@ -18,7 +18,10 @@
     pkgs.nixpkgs-fmt
   ];
 
-  fonts.packages = with pkgs; [ recursive nerd-fonts.jetbrains-mono ];
+  fonts.packages = with pkgs; [
+    recursive
+    nerd-fonts.jetbrains-mono
+  ];
 
   # Create /etc/bashrc that loads the nix-darwin environment.
   # programs.fish.enable = true;

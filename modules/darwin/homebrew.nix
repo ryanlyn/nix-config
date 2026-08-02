@@ -1,23 +1,22 @@
 { config, lib, ... }:
 
 let
-  mkIfCaskPresent = cask:
-    lib.mkIf (lib.any (x: x == cask) config.homebrew.casks);
+  mkIfCaskPresent = cask: lib.mkIf (lib.any (x: x == cask) config.homebrew.casks);
 
-in {
+in
+{
   homebrew.enable = true;
-  homebrew.autoUpdate = true;
-  homebrew.cleanup = "zap";
+  homebrew.onActivation = {
+    autoUpdate = true;
+    cleanup = "none";
+    upgrade = true;
+  };
   homebrew.global.brewfile = true;
-  homebrew.global.noLock = true;
 
   homebrew.taps = [
-    "homebrew/cask"
-    "homebrew/cask-drivers"
-    "homebrew/cask-fonts"
-    "homebrew/cask-versions"
-    "homebrew/core"
-    "homebrew/services"
+    "cameroncooke/axe"
+    "openclaw/tap"
+    "steipete/tap"
   ];
 
   # Prefer installing application from the Mac App Store
@@ -58,25 +57,36 @@ in {
   # If an app isn't available in the Mac App Store, or the version in the App Store has
   # limitiations, e.g., Transmit, install the Homebrew Cask.
   homebrew.casks = [
-    "appcleaner"
-    "amethyst"
-    # "firefox"
-    # "google-chrome"
-    # "google-drive"
-    # "signal"  # prefer official source
-    # "transmission"  # prefer official source
-    # "visual-studio-code"
-    # "yubico-yubikey-manager"  # prefer official source
-    # "zoom"
+    "gcloud-cli"
+    "repobar"
   ];
 
   # Configuration related to casks
-  environment.variables.SSH_AUTH_SOCK = mkIfCaskPresent "secretive"
-    "${config.system.primaryUserHome}/Library/Containers/com.maxgoedjen.Secretive.SecretAgent/Data/socket.ssh";
+  environment.variables.SSH_AUTH_SOCK = mkIfCaskPresent "secretive" "${config.system.primaryUserHome}/Library/Containers/com.maxgoedjen.Secretive.SecretAgent/Data/socket.ssh";
 
   # For cli packages that aren't currently available for macOS in `nixpkgs`.Packages should be
   # installed in `../home/default.nix` whenever possible.
   homebrew.brews = [
-    "libomp" # needed for xgboost
+    "cairo"
+    "cameroncooke/axe/axe"
+    "ddrescue"
+    "ffmpeg"
+    "ghostscript"
+    "gogcli"
+    "just"
+    "lazygit"
+    "mise"
+    "mosh"
+    "neovim"
+    "nvm"
+    "openclaw/tap/crabbox"
+    "openjdk"
+    "python@3.13"
+    "steipete/tap/sag"
+    "tectonic"
+    "testdisk"
+    "vhs"
+    "wimlib"
+    "xcodegen"
   ];
 }

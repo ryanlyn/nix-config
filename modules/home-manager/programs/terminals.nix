@@ -1,7 +1,18 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 lib.mkIf config.local.features.programs.enable {
-  programs.tmux = { enable = true; };
+  programs.tmux = {
+    enable = true;
+    terminal = "tmux-256color";
+    extraConfig = ''
+      set -as terminal-features ',xterm-ghostty:RGB,xterm-256color:RGB'
+    '';
+  };
 
   programs.ghostty = lib.mkIf pkgs.stdenv.isDarwin {
     enable = true;
