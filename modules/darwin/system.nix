@@ -49,7 +49,7 @@
       NSNavPanelExpandedStateForSaveMode = true;
       NSNavPanelExpandedStateForSaveMode2 = true;
       _HIHideMenuBar = false;
-      "com.apple.keyboard.fnState" = true;
+      "com.apple.keyboard.fnState" = false;
     };
 
     # dock
