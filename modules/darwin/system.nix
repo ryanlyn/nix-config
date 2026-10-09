@@ -71,7 +71,7 @@
       FXEnableExtensionChangeWarning = false;
       ShowPathbar = true;
       ShowStatusBar = true;
-      _FXShowPosixPathInTitle = true;
+      _FXShowPosixPathInTitle = false;
       _FXSortFoldersFirst = true;
     };
 
